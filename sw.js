@@ -1,5 +1,10 @@
-const CACHE = 'sekunde30-v1';
-const SHELL = ['/', '/index.html', '/manifest.json', '/icon.svg'];
+const CACHE = 'sekunde30-v2';
+const SHELL = [
+  '/sekunde30/',
+  '/sekunde30/index.html',
+  '/sekunde30/manifest.json',
+  '/sekunde30/icon.svg'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -33,7 +38,7 @@ self.addEventListener('fetch', e => {
   }
 
   // Cache-first for shell assets
-  if (SHELL.some(s => url.pathname === s || url.pathname.endsWith(s))) {
+  if (SHELL.some(s => url.pathname === s || url.pathname.endsWith('/index.html'))) {
     e.respondWith(
       caches.match(e.request).then(cached => cached || fetch(e.request))
     );
