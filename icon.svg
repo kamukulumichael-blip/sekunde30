@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="114" fill="#080C18"/>
+  <text x="256" y="210" font-family="Inter, -apple-system, sans-serif" font-size="78"
+        font-weight="300" letter-spacing="14" text-anchor="middle" fill="#8899B8">SEKUNDE</text>
+  <text x="256" y="360" font-family="Inter, -apple-system, sans-serif" font-size="190"
+        font-weight="800" letter-spacing="-8" text-anchor="middle" fill="#D4A843">30</text>
+  <rect x="96" y="390" width="320" height="3" rx="2" fill="#D4A843" opacity="0.4"/>
+  <text x="256" y="445" font-family="Inter, -apple-system, sans-serif" font-size="46"
+        font-weight="600" letter-spacing="10" text-anchor="middle" fill="#D4A843">LENZI</text>
+</svg>

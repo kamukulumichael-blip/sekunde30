@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sekunde 30 · LENZI</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="theme-color" content="#080C18">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sekunde 30">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:          #080C18;
+  --surface:     #0F1527;
+  --surface-2:   #172036;
+  --surface-3:   #1E2A48;
+  --border:      rgba(255,255,255,0.06);
+  --border-md:   rgba(255,255,255,0.10);
+  --border-hi:   rgba(255,255,255,0.18);
+
+  --gold:        #D4A843;
+  --gold-lt:     #EAC870;
+  --gold-dim:    rgba(212,168,67,0.15);
+  --gold-glow:   rgba(212,168,67,0.06);
+  --gold-border: rgba(212,168,67,0.35);
+
+  --text:        #E8ECF5;
+  --text-2:      #8899B8;
+  --text-3:      #4C5872;
+
+  --ai:          #A78BFA;  --ai-bg:    rgba(167,139,250,0.10);
+  --africa:      #38BDF8;  --africa-bg: rgba(56,189,248,0.10);
+  --edu:         #34D399;  --edu-bg:   rgba(52,211,153,0.10);
+  --employ:      #FB923C;  --employ-bg: rgba(251,146,60,0.10);
+  --lead:        #D4A843;  --lead-bg:  rgba(212,168,67,0.10);
+  --tzke:        #10B981;  --tzke-bg:  rgba(16,185,129,0.10);
+
+  --success:     #34D399;
+  --error:       #F87171;
+  --warn:        #FBBF24;
+
+  --r-sm:  7px;
+  --r-md:  12px;
+  --r-lg:  18px;
+  --t:     0.18s ease;
+  --font:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:  'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  --header-h: 58px;
+}
+
+/* ── RESET ─────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg); color:var(--text); font-family:var(--font);
+  font-size:14px; line-height:1.5; min-height:100vh;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+button { font-family:var(--font); cursor:pointer; border:none; }
+input  { font-family:var(--font); }
+a { color:var(--gold); text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+/* ── SCROLLBAR ─────────────────────────────────────────────────── */
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--surface-3); border-radius:2px; }
+
+/* ── HEADER ────────────────────────────────────────────────────── */
+.header {
+  position:sticky; top:0; z-index:200; height:var(--header-h);
+  background:rgba(8,12,24,0.92); backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; gap:12px;
+}
+.header-brand { display:flex; align-items:center; gap:14px; }
+.brand-mark {
+  font-size:13px; font-weight:800; letter-spacing:0.18em;
+  color:var(--gold); text-transform:uppercase;
+}
+.brand-sep { width:1px; height:18px; background:var(--border-md); }
+.brand-product { font-size:13px; font-weight:600; color:var(--text-2); letter-spacing:0.04em; }
+.freshness-pill {
+  display:flex; align-items:center; gap:6px;
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:20px; padding:4px 10px; font-size:11px; color:var(--text-3);
+}
+.freshness-dot {
+  width:6px; height:6px; border-radius:50%; background:var(--text-3);
+  flex-shrink:0;
+}
+.freshness-dot.live  { background:var(--success); animation:pulse 2s infinite; }
+.freshness-dot.stale { background:var(--warn); }
+.freshness-dot.err   { background:var(--error); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.header-right { display:flex; align-items:center; gap:8px; }
+.icon-btn {
+  width:34px; height:34px; border-radius:var(--r-sm);
+  background:var(--surface); border:1px solid var(--border-md);
+  color:var(--text-2); font-size:16px;
+  display:flex; align-items:center; justify-content:center;
+  transition:all var(--t);
+}
+.icon-btn:hover { background:var(--surface-2); color:var(--text); border-color:var(--border-hi); }
+
+/* ── LAYOUT ────────────────────────────────────────────────────── */
+.layout {
+  display:grid;
+  grid-template-columns:1fr 300px;
+  min-height:calc(100vh - var(--header-h));
+}
+.main-panel { padding:20px; overflow-x:hidden; }
+.side-panel {
+  border-left:1px solid var(--border);
+  display:flex; flex-direction:column;
+  position:sticky; top:var(--header-h);
+  height:calc(100vh - var(--header-h));
+  overflow:hidden;
+}
+
+/* ── CREATOR PULSE ─────────────────────────────────────────────── */
+.pulse-wrap {
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:var(--r-lg); margin-bottom:18px; overflow:hidden;
+}
+.pulse-toggle {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 16px; cursor:pointer; user-select:none;
+  background:linear-gradient(135deg,#0F1830 0%,#182244 100%);
+  border-bottom:1px solid var(--border);
+  transition:opacity var(--t);
+}
+.pulse-toggle:hover { opacity:.9; }
+.pulse-toggle-left { display:flex; align-items:center; gap:9px; }
+.pulse-label {
+  font-size:11px; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.1em; color:var(--gold);
+}
+.pulse-sub { font-size:11px; color:var(--text-3); }
+.pulse-chevron { color:var(--text-3); font-size:12px; transition:transform var(--t); }
+.pulse-chevron.open { transform:rotate(180deg); }
+.pulse-body { display:none; padding:16px; }
+.pulse-body.open { display:block; }
+
+.stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+.stat-card {
+  background:var(--surface-2); border-radius:var(--r-sm);
+  padding:10px 8px; text-align:center;
+}
+.stat-num { font-size:20px; font-weight:800; color:var(--gold); line-height:1; margin-bottom:3px; }
+.stat-label { font-size:9px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; }
+.stat-plat { font-size:9px; color:var(--text-3); margin-top:2px; }
+
+.gap-alert {
+  display:flex; gap:8px; align-items:flex-start;
+  background:rgba(248,113,113,.07); border:1px solid rgba(248,113,113,.18);
+  border-radius:var(--r-sm); padding:10px 12px; margin-bottom:10px;
+  font-size:11px; color:#FCA5A5; line-height:1.5;
+}
+.moat-note {
+  display:flex; gap:8px; align-items:flex-start;
+  background:var(--tzke-bg); border:1px solid rgba(16,185,129,.2);
+  border-radius:var(--r-sm); padding:10px 12px; margin-bottom:14px;
+  font-size:11px; color:#6EE7B7; line-height:1.5;
+}
+
+.divider { height:1px; background:var(--border); margin:12px 0; }
+.pulse-section-label {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--text-3); margin-bottom:8px;
+}
+
+.pillar-list { display:flex; flex-direction:column; gap:6px; }
+.pillar-row { display:flex; align-items:center; gap:8px; }
+.pillar-name { font-size:11px; color:var(--text-2); width:180px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pillar-track { flex:1; height:5px; background:var(--surface-3); border-radius:3px; overflow:hidden; }
+.pillar-fill { height:100%; border-radius:3px; background:var(--surface-3); transition:width .5s ease; }
+.pillar-fill.existing { background:var(--text-3); }
+.pillar-fill.target   { background:var(--gold); }
+.pillar-fill.gap      { background:var(--error); opacity:.7; }
+.pillar-count { font-size:10px; color:var(--text-3); width:36px; text-align:right; flex-shrink:0; }
+
+/* ── FILTERS ───────────────────────────────────────────────────── */
+.filters {
+  display:flex; gap:5px; flex-wrap:wrap;
+  margin-bottom:14px; align-items:center;
+}
+.filter-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); margin-right:2px; }
+.filter-btn {
+  background:var(--surface); border:1px solid var(--border-md);
+  color:var(--text-2); border-radius:20px; padding:5px 12px;
+  font-size:11px; font-weight:500; transition:all var(--t);
+}
+.filter-btn:hover { border-color:var(--border-hi); color:var(--text); }
+.filter-btn.active { background:var(--gold); color:var(--bg); border-color:var(--gold); font-weight:700; }
+.filter-btn.active.tzke-f { background:var(--tzke); border-color:var(--tzke); }
+.filter-btn.tzke-f:not(.active):hover { border-color:var(--tzke); color:var(--tzke); }
+
+/* ── SECTION HEADER ────────────────────────────────────────────── */
+.section-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:12px;
+}
+.section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); }
+.topic-count {
+  font-size:11px; color:var(--text-3);
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:6px; padding:2px 8px;
+}
+
+/* ── TOPIC GRID ────────────────────────────────────────────────── */
+.topic-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+
+/* ── TOPIC CARD ────────────────────────────────────────────────── */
+.topic-card {
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:var(--r-md); padding:16px;
+  cursor:pointer; transition:all var(--t); position:relative;
+  overflow:hidden; user-select:none; touch-action:pan-y;
+}
+.topic-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:transparent; transition:background var(--t);
+}
+.topic-card:hover { border-color:var(--border-hi); background:var(--surface-2); }
+.topic-card.selected { border-color:var(--gold-border); background:var(--gold-glow); }
+.topic-card.selected::before { background:var(--gold); }
+.topic-card.tzke-card { border-left:3px solid var(--tzke); }
+.topic-card.tzke-card.selected { border-color:var(--tzke); }
+.topic-card.tzke-card.selected::before { background:var(--tzke); }
+
+/* Swipe feedback */
+.topic-card.swiping-right { background:rgba(52,211,153,.06); }
+.topic-card.swiping-left  { background:rgba(248,113,113,.06); }
+
+.card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.card-title { font-size:14px; font-weight:700; color:var(--text); line-height:1.35; flex:1; }
+
+.select-ring {
+  width:22px; height:22px; border-radius:50%; flex-shrink:0;
+  border:2px solid var(--border-hi);
+  background:var(--surface-2);
+  display:flex; align-items:center; justify-content:center;
+  transition:all var(--t); margin-top:1px;
+}
+.topic-card.selected .select-ring { background:var(--gold); border-color:var(--gold); }
+.topic-card.tzke-card.selected .select-ring { background:var(--tzke); border-color:var(--tzke); }
+.check-svg { display:none; }
+.topic-card.selected .check-svg { display:block; }
+
+.card-badges { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
+.cat-badge {
+  font-size:10px; font-weight:700; border-radius:4px;
+  padding:2px 7px; text-transform:uppercase; letter-spacing:.05em;
+}
+.cat-ai   { background:var(--ai-bg);     color:var(--ai); }
+.cat-af   { background:var(--africa-bg); color:var(--africa); }
+.cat-edu  { background:var(--edu-bg);    color:var(--edu); }
+.cat-emp  { background:var(--employ-bg); color:var(--employ); }
+.cat-lead { background:var(--lead-bg);   color:var(--lead); }
+.cat-tzke { background:var(--tzke-bg);   color:var(--tzke); }
+
+.score-row { display:flex; align-items:center; gap:8px; }
+.score-item { display:flex; align-items:center; gap:4px; }
+.score-dots { display:flex; gap:2px; }
+.score-dot { width:5px; height:5px; border-radius:50%; background:var(--surface-3); }
+.score-dot.on { background:var(--gold); }
+.score-dot.on.tzke { background:var(--tzke); }
+.score-label { font-size:9px; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; }
+
+.card-why {
+  font-size:12px; color:var(--text-2); margin-bottom:7px; line-height:1.5;
+}
+.card-why strong { color:var(--text); }
+
+.card-angle {
+  font-size:11px; color:var(--gold); font-weight:500;
+  margin-bottom:8px; padding:7px 10px;
+  background:var(--gold-dim); border-radius:6px;
+  border-left:2px solid var(--gold); line-height:1.5;
+}
+.topic-card.tzke-card .card-angle {
+  color:var(--tzke); background:var(--tzke-bg); border-left-color:var(--tzke);
+}
+
+.card-hook {
+  font-size:13px; font-style:italic; font-weight:500;
+  padding:8px 11px; border-radius:6px; line-height:1.5; margin-bottom:8px;
+  background:var(--surface-2); border-left:2px solid var(--border-hi); color:var(--text);
+}
+
+.card-platforms { display:flex; gap:4px; flex-wrap:wrap; }
+.plat-chip {
+  font-size:9px; font-weight:600; color:var(--text-3);
+  background:var(--surface-2); border-radius:4px; padding:2px 6px;
+  text-transform:uppercase; letter-spacing:.04em;
+}
+
+/* ── SIDE PANEL TABS ───────────────────────────────────────────── */
+.panel-tabs {
+  display:flex; border-bottom:1px solid var(--border);
+}
+.panel-tab {
+  flex:1; padding:12px 0; font-size:11px; font-weight:600;
+  text-align:center; color:var(--text-3); background:none;
+  text-transform:uppercase; letter-spacing:.07em;
+  border-bottom:2px solid transparent; margin-bottom:-1px;
+  transition:all var(--t);
+}
+.panel-tab:hover { color:var(--text-2); }
+.panel-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* ── QUEUE PANEL ───────────────────────────────────────────────── */
+.queue-panel { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+.queue-header {
+  padding:12px 16px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.queue-title { font-size:11px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:.08em; }
+.queue-count {
+  background:var(--gold); color:var(--bg); border-radius:10px;
+  padding:2px 8px; font-size:11px; font-weight:700; min-width:22px; text-align:center;
+}
+.queue-list { flex:1; overflow-y:auto; padding:10px 14px; }
+.empty-state { text-align:center; padding:32px 12px; }
+.empty-icon { font-size:32px; margin-bottom:8px; opacity:.5; }
+.empty-text { font-size:12px; color:var(--text-3); line-height:1.6; }
+.queue-item {
+  display:flex; align-items:flex-start; gap:9px;
+  padding:9px 0; border-bottom:1px solid var(--border);
+}
+.queue-item:last-child { border-bottom:none; }
+.queue-num {
+  width:20px; height:20px; border-radius:50%;
+  background:var(--gold); color:var(--bg);
+  font-size:10px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.queue-title-text { font-size:11px; font-weight:600; color:var(--text); line-height:1.4; flex:1; }
+.rm-btn {
+  background:none; border:none; color:var(--text-3);
+  font-size:16px; padding:0 2px; flex-shrink:0;
+  line-height:1; transition:color var(--t);
+}
+.rm-btn:hover { color:var(--error); }
+
+.queue-actions { padding:12px 14px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:7px; }
+.btn-generate {
+  width:100%; padding:12px; border-radius:var(--r-sm);
+  font-size:13px; font-weight:700; transition:all var(--t);
+}
+.btn-generate:disabled { opacity:.35; cursor:not-allowed; }
+.btn-gen-full {
+  background:var(--gold); color:var(--bg);
+}
+.btn-gen-full:hover:not(:disabled) { background:var(--gold-lt); }
+.btn-gen-article {
+  background:var(--surface-2); color:var(--text-2);
+  border:1px solid var(--border-md);
+}
+.btn-gen-article:hover:not(:disabled) { background:var(--surface-3); color:var(--text); }
+.queue-hint { font-size:11px; color:var(--text-3); text-align:center; line-height:1.5; }
+
+/* ── OUTPUT PANEL ──────────────────────────────────────────────── */
+.output-panel {
+  display:flex; flex-direction:column; flex:1; overflow:hidden;
+}
+.output-header {
+  padding:12px 16px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.output-title { font-size:11px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:.08em; }
+.output-back-btn {
+  font-size:11px; color:var(--text-3); background:none; border:none;
+  padding:0; transition:color var(--t); font-weight:500;
+}
+.output-back-btn:hover { color:var(--text); }
+.output-body { flex:1; overflow-y:auto; padding:14px; }
+.output-stream {
+  font-family:var(--mono); font-size:11.5px; color:var(--text-2);
+  white-space:pre-wrap; word-break:break-word; line-height:1.7;
+}
+.output-cursor { display:inline-block; width:2px; height:14px; background:var(--gold); vertical-align:text-bottom; animation:blink .9s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.output-section {
+  background:var(--surface-2); border:1px solid var(--border-md);
+  border-radius:var(--r-sm); padding:13px; margin-bottom:10px; position:relative;
+}
+.output-section-label {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--gold); margin-bottom:8px;
+}
+.output-section.article .output-section-label { color:var(--africa); }
+.output-pre {
+  font-family:var(--mono); font-size:11px; white-space:pre-wrap;
+  word-break:break-word; line-height:1.7; color:var(--text-2);
+}
+.output-copy-btn {
+  position:absolute; top:10px; right:10px;
+  background:var(--surface-3); border:1px solid var(--border-md);
+  color:var(--text-3); border-radius:5px; padding:3px 8px;
+  font-size:10px; font-weight:600; transition:all var(--t);
+}
+.output-copy-btn:hover { background:var(--gold); color:var(--bg); border-color:var(--gold); }
+.output-copy-btn.copied { background:var(--success); color:var(--bg); border-color:var(--success); }
+
+.copy-all-btn {
+  width:100%; padding:10px; border-radius:var(--r-sm);
+  background:var(--surface-2); border:1px solid var(--border-md);
+  color:var(--text-2); font-size:12px; font-weight:600;
+  margin-bottom:12px; transition:all var(--t);
+}
+.copy-all-btn:hover { background:var(--surface-3); color:var(--text); }
+
+/* ── GENERATING STATE ──────────────────────────────────────────── */
+.generating-state {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  flex:1; padding:30px 20px; gap:14px;
+}
+.gen-spinner {
+  width:36px; height:36px; border:3px solid var(--surface-3);
+  border-top-color:var(--gold); border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.gen-label { font-size:13px; font-weight:600; color:var(--text-2); text-align:center; }
+.gen-sub { font-size:11px; color:var(--text-3); text-align:center; line-height:1.5; }
+.gen-progress {
+  width:100%; max-width:180px; height:3px;
+  background:var(--surface-3); border-radius:2px; overflow:hidden;
+}
+.gen-progress-bar {
+  height:100%; background:var(--gold); border-radius:2px;
+  transition:width 1s ease;
+}
+
+/* ── SETTINGS MODAL ────────────────────────────────────────────── */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.7);
+  z-index:500; display:none; align-items:center; justify-content:center;
+  padding:20px; backdrop-filter:blur(4px);
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:var(--r-lg); padding:24px; width:100%; max-width:420px;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);
+}
+.modal-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.modal-sub { font-size:12px; color:var(--text-3); margin-bottom:20px; line-height:1.5; }
+.field-label { font-size:11px; font-weight:600; color:var(--text-2); margin-bottom:6px; display:block; }
+.field-row { position:relative; margin-bottom:16px; }
+.field-input {
+  width:100%; background:var(--surface-2); border:1px solid var(--border-md);
+  border-radius:var(--r-sm); padding:10px 40px 10px 12px; color:var(--text);
+  font-size:13px; outline:none; transition:border-color var(--t);
+}
+.field-input:focus { border-color:var(--gold-border); }
+.field-eye {
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  background:none; border:none; color:var(--text-3); font-size:15px;
+  padding:2px; transition:color var(--t);
+}
+.field-eye:hover { color:var(--text); }
+.field-hint { font-size:11px; color:var(--text-3); margin-top:5px; line-height:1.5; }
+.modal-actions { display:flex; gap:8px; margin-top:6px; }
+.btn-modal {
+  flex:1; padding:11px; border-radius:var(--r-sm);
+  font-size:13px; font-weight:600; transition:all var(--t);
+}
+.btn-modal-primary { background:var(--gold); color:var(--bg); }
+.btn-modal-primary:hover { background:var(--gold-lt); }
+.btn-modal-secondary { background:var(--surface-2); color:var(--text-2); border:1px solid var(--border-md); }
+.btn-modal-secondary:hover { background:var(--surface-3); color:var(--text); }
+.test-result { font-size:11px; margin-top:8px; padding:7px 10px; border-radius:5px; }
+.test-ok  { background:rgba(52,211,153,.1); color:var(--success); }
+.test-err { background:rgba(248,113,113,.1); color:var(--error); }
+
+/* ── ONBOARDING ────────────────────────────────────────────────── */
+.onboarding {
+  position:fixed; inset:0; background:var(--bg); z-index:600;
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  padding:30px 24px;
+}
+.onboarding.open { display:flex; }
+.ob-mark { font-size:48px; margin-bottom:20px; }
+.ob-brand { font-size:13px; font-weight:800; letter-spacing:.18em; color:var(--gold); text-transform:uppercase; margin-bottom:6px; }
+.ob-product { font-size:28px; font-weight:800; color:var(--text); margin-bottom:8px; }
+.ob-sub { font-size:14px; color:var(--text-3); max-width:360px; text-align:center; line-height:1.6; margin-bottom:28px; }
+.ob-card {
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:var(--r-lg); padding:22px; width:100%; max-width:400px;
+}
+.ob-card-title { font-size:13px; font-weight:600; color:var(--text-2); margin-bottom:14px; }
+
+/* ── LOADING ───────────────────────────────────────────────────── */
+.skeleton { background:var(--surface); border-radius:var(--r-md); padding:16px; margin-bottom:10px; }
+.skel-line { background:var(--surface-2); border-radius:4px; margin-bottom:8px; }
+.skel-line.w-80 { width:80%; height:14px; }
+.skel-line.w-60 { width:60%; height:10px; }
+.skel-line.w-40 { width:40%; height:10px; }
+.skel-line.w-90 { width:90%; height:11px; }
+.skel-animated { animation:skel 1.5s ease-in-out infinite; }
+@keyframes skel { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+/* ── MOBILE ────────────────────────────────────────────────────── */
+@media (max-width:700px) {
+  .layout { grid-template-columns:1fr; }
+  .side-panel {
+    position:static; height:auto;
+    border-left:none; border-top:1px solid var(--border);
+  }
+  .stat-grid { grid-template-columns:repeat(2,1fr); }
+  .pulse-section-label + .pillar-list .pillar-name { width:130px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING (first visit) -->
+<div class="onboarding" id="onboarding">
+  <div class="ob-mark">🎬</div>
+  <div class="ob-brand">LENZI</div>
+  <div class="ob-product">Sekunde 30</div>
+  <div class="ob-sub">Your weekly content intelligence hub. Research, select, generate — all in one place.</div>
+  <div class="ob-card">
+    <div class="ob-card-title">Add your Anthropic API key to enable script generation</div>
+    <label class="field-label">Anthropic API Key</label>
+    <div class="field-row">
+      <input type="password" class="field-input" id="obKey" placeholder="sk-ant-api03-…" autocomplete="off">
+      <button class="field-eye" onclick="toggleVis('obKey',this)">👁</button>
+    </div>
+    <div class="field-hint">Stored only in this browser. Never sent anywhere except Anthropic's API.<br>Get yours at console.anthropic.com</div>
+    <div id="obTestResult"></div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn-modal btn-modal-secondary" onclick="skipOnboarding()">Skip for now</button>
+      <button class="btn-modal btn-modal-primary" onclick="saveOnboarding()">Save &amp; Start →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-title">Settings</div>
+    <div class="modal-sub">Manage your Anthropic API key for script generation. Topics are fetched automatically every Monday — no key needed for that.</div>
+    <label class="field-label">Anthropic API Key</label>
+    <div class="field-row">
+      <input type="password" class="field-input" id="settingsKey" placeholder="sk-ant-api03-…" autocomplete="off">
+      <button class="field-eye" onclick="toggleVis('settingsKey',this)">👁</button>
+    </div>
+    <div class="field-hint">This is stored in your browser's localStorage and only sent to api.anthropic.com.</div>
+    <div id="settingsTestResult"></div>
+    <div class="modal-actions">
+      <button class="btn-modal btn-modal-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn-modal btn-modal-secondary" onclick="testKey('settingsKey','settingsTestResult')" style="flex:.6">Test</button>
+      <button class="btn-modal btn-modal-primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">
+    <div class="brand-mark">LENZI</div>
+    <div class="brand-sep"></div>
+    <div class="brand-product">Sekunde 30</div>
+    <div class="freshness-pill">
+      <div class="freshness-dot" id="freshDot"></div>
+      <span id="freshText">Loading…</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="icon-btn" title="Refresh topics" onclick="doRefresh()">↻</button>
+    <button class="icon-btn" title="Settings" onclick="openSettings()">⚙</button>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT: TOPIC FEED -->
+  <div class="main-panel">
+
+    <!-- Creator Pulse -->
+    <div class="pulse-wrap">
+      <div class="pulse-toggle" onclick="togglePulse()">
+        <div class="pulse-toggle-left">
+          <div class="pulse-label">📊 Creator Pulse</div>
+          <div class="pulse-sub">Michael's reach &amp; TZ/KE landscape</div>
+        </div>
+        <div class="pulse-chevron" id="pulseChev">▼</div>
+      </div>
+      <div class="pulse-body" id="pulseBody">
+
+        <div class="pulse-section-label">Your Verified Reach — June 2026</div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num">211K</div>
+            <div class="stat-label">Followers</div>
+            <div class="stat-plat">TikTok · 1.3M likes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">161K</div>
+            <div class="stat-label">Followers</div>
+            <div class="stat-plat">Facebook</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">104K</div>
+            <div class="stat-label">Followers</div>
+            <div class="stat-plat">Instagram</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">~500K</div>
+            <div class="stat-label">Total Reach</div>
+            <div class="stat-plat">EAC audience</div>
+          </div>
+        </div>
+
+        <div class="gap-alert">
+          ⚠️ <div><strong style="color:#FCA5A5">Transition gap:</strong> 62 Relationships posts, 52 Growth Mindset, 38 Motivation — but only <strong>6 AI &amp; Technology posts</strong>. Sekunde 30 must bridge your audience to your new positioning without losing them.</div>
+        </div>
+        <div class="moat-note">
+          ✅ <div><strong style="color:#6EE7B7">Your moat:</strong> Nobody in TZ/KE is doing public education systems + evidence-based policy + AI + Swahili at scale. That lane is completely empty and it's yours.</div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="pulse-section-label">Current TikTok Pillars → Sekunde 30 Target</div>
+        <div class="pillar-list">
+          <div class="pillar-row"><div class="pillar-name">Relationships / Living with People</div><div class="pillar-track"><div class="pillar-fill existing" style="width:100%"></div></div><div class="pillar-count">62 posts</div></div>
+          <div class="pillar-row"><div class="pillar-name">Growth Mindset</div><div class="pillar-track"><div class="pillar-fill existing" style="width:84%"></div></div><div class="pillar-count">52 posts</div></div>
+          <div class="pillar-row"><div class="pillar-name">Perspective &amp; Motivation</div><div class="pillar-track"><div class="pillar-fill existing" style="width:61%"></div></div><div class="pillar-count">38 posts</div></div>
+          <div class="pillar-row"><div class="pillar-name">Personal Development</div><div class="pillar-track"><div class="pillar-fill existing" style="width:35%"></div></div><div class="pillar-count">22 posts</div></div>
+          <div class="pillar-row"><div class="pillar-name">Career &amp; Development</div><div class="pillar-track"><div class="pillar-fill existing" style="width:34%"></div></div><div class="pillar-count">21 posts</div></div>
+          <div class="pillar-row"><div class="pillar-name">AI &amp; Technology ← <em>Sekunde 30</em></div><div class="pillar-track"><div class="pillar-fill target" style="width:10%"></div></div><div class="pillar-count">6 posts</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('AI & Humanity',this)">AI &amp; Humanity</button>
+      <button class="filter-btn" onclick="setFilter('Africa',this)">Africa</button>
+      <button class="filter-btn" onclick="setFilter('Education',this)">Education</button>
+      <button class="filter-btn" onclick="setFilter('Employability',this)">Employability</button>
+      <button class="filter-btn" onclick="setFilter('Leadership',this)">Leadership</button>
+      <button class="filter-btn tzke-f" onclick="setFilter('TZ/KE Context',this)">🌍 TZ/KE</button>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title" id="secTitle">This Week's Topics</span>
+      <span class="topic-count" id="tCount">—</span>
+    </div>
+
+    <div class="topic-grid" id="grid">
+      <!-- Skeleton loading -->
+      <div id="skeletons">
+        <div class="skeleton skel-animated"><div class="skel-line w-80"></div><div class="skel-line w-40"></div><div class="skel-line w-90"></div><div class="skel-line w-60"></div></div>
+        <div class="skeleton skel-animated"><div class="skel-line w-60"></div><div class="skel-line w-40"></div><div class="skel-line w-90"></div><div class="skel-line w-80"></div></div>
+        <div class="skeleton skel-animated"><div class="skel-line w-80"></div><div class="skel-line w-40"></div><div class="skel-line w-60"></div><div class="skel-line w-90"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: SIDE PANEL -->
+  <div class="side-panel">
+
+    <!-- Queue view -->
+    <div class="queue-panel" id="queuePanel">
+      <div class="queue-header">
+        <span class="queue-title">Production Queue</span>
+        <span class="queue-count" id="queueCount">0</span>
+      </div>
+      <div class="queue-list" id="queueList">
+        <div class="empty-state">
+          <div class="empty-icon">◎</div>
+          <div class="empty-text">Tap a topic to select it.<br>Swipe right on mobile.<br>Then generate content.</div>
+        </div>
+      </div>
+      <div class="queue-actions">
+        <button class="btn-generate btn-gen-full" id="btnFull" onclick="startGenerate('full')" disabled>🎬 Scripts + Article</button>
+        <button class="btn-generate btn-gen-article" id="btnArticle" onclick="startGenerate('article')" disabled>📝 Article Only</button>
+        <div class="queue-hint" id="queueHint">Select 1–6 topics to begin</div>
+      </div>
+    </div>
+
+    <!-- Output view (hidden until generation) -->
+    <div class="output-panel" id="outputPanel" style="display:none">
+      <div class="output-header">
+        <span class="output-title" id="outputTitle">Generating…</span>
+        <button class="output-back-btn" onclick="backToQueue()">← Back</button>
+      </div>
+      <div class="output-body" id="outputBody">
+        <div class="generating-state" id="genState">
+          <div class="gen-spinner"></div>
+          <div class="gen-label">Claude is writing your scripts…</div>
+          <div class="gen-sub">~30–60 seconds. Scripts stream in as they're written.</div>
+          <div class="gen-progress"><div class="gen-progress-bar" id="genBar" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ── CONSTANTS ─────────────────────────────────────────────────── */
+const API_URL  = 'https://api.anthropic.com/v1/messages';
+const MODEL    = 'claude-sonnet-4-6';
+const KEY_STORE = 'lenzi_s30_api_key';
+const OB_STORE  = 'lenzi_s30_onboarded';
+
+/* ── STATE ─────────────────────────────────────────────────────── */
+let topics    = [];
+let selected  = new Set();
+let filter    = 'all';
+let pulseOpen = false;
+const outMap  = {};    // id → section text for copy
+
+/* ── BOOT ──────────────────────────────────────────────────────── */
+async function boot() {
+  registerSW();
+  if (!localStorage.getItem(OB_STORE)) {
+    document.getElementById('onboarding').classList.add('open');
+  }
+  await loadTopics();
+  setupSwipe();
+}
+
+function registerSW() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+}
+
+/* ── TOPIC LOADING ─────────────────────────────────────────────── */
+async function loadTopics() {
+  try {
+    const res = await fetch('topics.json?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    topics = Array.isArray(data.topics) ? data.topics : data;
+    setFreshness(data.generated);
+  } catch (e) {
+    setFreshness(null, true);
+    // If topics.json failed (e.g. local file protocol), try using built-ins
+    if (!topics.length) topics = BUILTIN_TOPICS;
+  }
+  render();
+}
+
+function setFreshness(isoDate, isError = false) {
+  const dot  = document.getElementById('freshDot');
+  const text = document.getElementById('freshText');
+  if (isError) {
+    dot.className = 'freshness-dot err';
+    text.textContent = 'Could not load topics';
+    return;
+  }
+  if (!isoDate) {
+    dot.className = 'freshness-dot';
+    text.textContent = 'Seed topics';
+    return;
+  }
+  const d    = new Date(isoDate);
+  const now  = new Date();
+  const days = Math.floor((now - d) / 86400000);
+  dot.className = days > 8 ? 'freshness-dot stale' : 'freshness-dot live';
+  text.textContent = days === 0 ? 'Updated today' : days === 1 ? 'Updated yesterday' : `Updated ${days}d ago`;
+}
+
+/* ── RENDER TOPICS ─────────────────────────────────────────────── */
+const CAT_CLASS = {
+  'AI & Humanity':'cat-ai', 'Africa':'cat-af', 'Education':'cat-edu',
+  'Employability':'cat-emp', 'Leadership':'cat-lead', 'TZ/KE Context':'cat-tzke'
+};
+const CAT_EMOJI = {
+  'AI & Humanity':'🤖','Africa':'🌍','Education':'📚',
+  'Employability':'💼','Leadership':'🎯','TZ/KE Context':'🌍'
+};
+
+function render() {
+  document.getElementById('skeletons').remove?.();
+  document.getElementById('skeletons')?.remove();
+
+  const filtered = filter === 'all' ? topics : topics.filter(t => t.category === filter);
+  document.getElementById('tCount').textContent = filtered.length + ' topic' + (filtered.length !== 1 ? 's' : '');
+  document.getElementById('secTitle').textContent =
+    filter === 'all'            ? "This Week's Topics"
+    : filter === 'TZ/KE Context' ? '🌍 East Africa — In Context'
+    : (CAT_EMOJI[filter] || '') + ' ' + filter;
+
+  const grid = document.getElementById('grid');
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--text-3)">No topics in this category yet.</div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(renderCard).join('');
+}
+
+function renderCard(t) {
+  const sel = selected.has(t.id);
+  const isTZKE = t.tzke || t.category === 'TZ/KE Context';
+  const plats = (t.platforms || []).slice(0,5).map(p => `<span class="plat-chip">${esc(p)}</span>`).join('');
+  const catCls = CAT_CLASS[t.category] || 'cat-edu';
+
+  const maxScore = 10;
+  const vDots  = scoreDots(t.virality || 0, maxScore, isTZKE);
+  const bDots  = scoreDots(t.brandFit || 0, maxScore, isTZKE);
+  const brDots = scoreDots(t.bridge || 0, maxScore, isTZKE);
+
+  return `
+<div class="topic-card${sel?' selected':''}${isTZKE?' tzke-card':''}" data-id="${t.id}" onclick="toggleSelect(${t.id})">
+  <div class="card-top">
+    <div class="card-title">${esc(t.title)}</div>
+    <div class="select-ring">
+      <svg class="check-svg" width="11" height="9" viewBox="0 0 11 9" fill="none">
+        <path d="M1 4.5L4 7.5L10 1.5" stroke="${isTZKE?'#10B981':'#080C18'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card-badges">
+    <span class="cat-badge ${catCls}">${esc(t.category)}</span>
+  </div>
+
+  <div class="score-row" style="margin-bottom:8px">
+    <div class="score-item"><div class="score-dots">${vDots}</div><div class="score-label">Viral</div></div>
+    <div class="score-item" style="margin-left:8px"><div class="score-dots">${bDots}</div><div class="score-label">Brand</div></div>
+    <div class="score-item" style="margin-left:8px"><div class="score-dots">${brDots}</div><div class="score-label">Bridge</div></div>
+  </div>
+
+  ${t.trendingBecause ? `<div class="card-why"><strong>Now:</strong> ${esc(t.trendingBecause)}</div>` : ''}
+  ${t.michaelAngle    ? `<div class="card-angle">💡 ${esc(t.michaelAngle)}</div>` : ''}
+  ${t.hook            ? `<div class="card-hook">"${esc(t.hook)}"</div>` : ''}
+  <div class="card-platforms">${plats}</div>
+</div>`;
+}
+
+function scoreDots(score, max, tzke) {
+  const filled = Math.round((score / max) * 5);
+  const cls = tzke ? ' tzke' : '';
+  return Array.from({length:5}, (_,i) =>
+    `<div class="score-dot${i < filled ? ' on' + cls : ''}"></div>`
+  ).join('');
+}
+
+/* ── SELECT / DESELECT ─────────────────────────────────────────── */
+function toggleSelect(id) {
+  if (selected.has(id)) {
+    selected.delete(id);
+  } else {
+    if (selected.size >= 6) { flashHint('Max 6 topics'); return; }
+    selected.add(id);
+  }
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) el.classList.toggle('selected', selected.has(id));
+  renderQueue();
+}
+
+function renderQueue() {
+  const count = selected.size;
+  document.getElementById('queueCount').textContent = count;
+
+  const btnFull    = document.getElementById('btnFull');
+  const btnArticle = document.getElementById('btnArticle');
+  btnFull.disabled = btnArticle.disabled = count === 0;
+
+  const hint = document.getElementById('queueHint');
+  hint.textContent = count === 0 ? 'Select 1–6 topics to begin'
+    : count === 1 ? '1 topic selected — ready'
+    : `${count} topics selected — ready`;
+
+  const list = document.getElementById('queueList');
+  if (count === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">◎</div><div class="empty-text">Tap a topic to select it.<br>Swipe right on mobile.<br>Then generate content.</div></div>`;
+    return;
+  }
+  const picks = topics.filter(t => selected.has(t.id));
+  list.innerHTML = picks.map((t,i) => `
+<div class="queue-item">
+  <div class="queue-num">${i+1}</div>
+  <div class="queue-title-text">${esc(t.title)}</div>
+  <button class="rm-btn" onclick="event.stopPropagation();removeFromQueue(${t.id})">×</button>
+</div>`).join('');
+}
+
+function removeFromQueue(id) {
+  selected.delete(id);
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) el.classList.remove('selected');
+  renderQueue();
+}
+
+/* ── SWIPE TO SELECT (mobile) ──────────────────────────────────── */
+function setupSwipe() {
+  let startX = 0, startY = 0, dragging = null, moved = false;
+
+  document.addEventListener('touchstart', e => {
+    const card = e.target.closest('.topic-card');
+    if (!card) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    dragging = card;
+    moved = false;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    if (!moved && Math.abs(dy) > Math.abs(dx) + 6) { dragging = null; return; }
+    if (Math.abs(dx) < 8 && !moved) return;
+    moved = true;
+    e.preventDefault();
+    const clamp = Math.max(-90, Math.min(90, dx));
+    dragging.style.transform = `translateX(${clamp}px)`;
+    dragging.style.transition = 'none';
+    dragging.classList.toggle('swiping-right', dx > 40);
+    dragging.classList.toggle('swiping-left',  dx < -40);
+  }, { passive: false });
+
+  document.addEventListener('touchend', e => {
+    if (!dragging) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    dragging.style.transform = '';
+    dragging.style.transition = '';
+    dragging.classList.remove('swiping-right', 'swiping-left');
+
+    if (moved) {
+      const id = parseInt(dragging.dataset.id);
+      if (dx > 55 && !selected.has(id))  toggleSelect(id);
+      if (dx < -55 && selected.has(id))  toggleSelect(id);
+    }
+    dragging = null;
+  }, { passive: true });
+}
+
+/* ── FILTERS ───────────────────────────────────────────────────── */
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+/* ── CREATOR PULSE ─────────────────────────────────────────────── */
+function togglePulse() {
+  pulseOpen = !pulseOpen;
+  document.getElementById('pulseBody').classList.toggle('open', pulseOpen);
+  document.getElementById('pulseChev').classList.toggle('open', pulseOpen);
+}
+
+/* ── GENERATE ──────────────────────────────────────────────────── */
+async function startGenerate(mode) {
+  const key = localStorage.getItem(KEY_STORE) || '';
+  if (!key) { openSettings(); flashHint('Add your API key first'); return; }
+  if (!selected.size) return;
+
+  // Show output panel
+  document.getElementById('queuePanel').style.display  = 'none';
+  document.getElementById('outputPanel').style.display = 'flex';
+  document.getElementById('outputTitle').textContent   = 'Generating…';
+  document.getElementById('outputBody').innerHTML = `
+    <div class="generating-state" id="genState">
+      <div class="gen-spinner"></div>
+      <div class="gen-label">Claude is writing your scripts…</div>
+      <div class="gen-sub">Scripts stream in as they're written.</div>
+      <div class="gen-progress"><div class="gen-progress-bar" id="genBar" style="width:5%"></div></div>
+    </div>`;
+
+  const picks  = topics.filter(t => selected.has(t.id));
+  const prompt = mode === 'full' ? buildFullPrompt(picks) : buildArticlePrompt(picks);
+
+  let buffer = '';
+  let progress = 5;
+  const barInterval = setInterval(() => {
+    progress = Math.min(progress + 3, 90);
+    const bar = document.getElementById('genBar');
+    if (bar) bar.style.width = progress + '%';
+  }, 1500);
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 8000,
+        stream: true,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error(errBody.error?.message || 'API error ' + res.status);
+    }
+
+    // Show streaming area
+    document.getElementById('outputBody').innerHTML = `<div class="output-stream" id="streamEl"></div>`;
+    const streamEl = document.getElementById('streamEl');
+
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      for (const line of chunk.split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(data);
+          if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+            buffer += evt.delta.text;
+            streamEl.textContent = buffer;
+            streamEl.scrollIntoView({ block: 'end', behavior: 'smooth' });
+          }
+        } catch {}
+      }
+    }
+
+    clearInterval(barInterval);
+    finalizeOutput(buffer, mode);
+
+  } catch (err) {
+    clearInterval(barInterval);
+    document.getElementById('outputBody').innerHTML = `
+      <div style="padding:20px;color:var(--error);font-size:13px;line-height:1.6">
+        <strong>Generation failed</strong><br>${esc(err.message)}<br><br>
+        <button onclick="backToQueue()" style="background:var(--surface-2);border:1px solid var(--border-md);color:var(--text-2);padding:8px 14px;border-radius:6px;font-size:12px;cursor:pointer">← Back</button>
+      </div>`;
+  }
+}
+
+function finalizeOutput(text, mode) {
+  document.getElementById('outputTitle').textContent =
+    mode === 'full' ? 'Scripts + Article' : 'Article Outlines';
+
+  // Split into sections on the ═══ dividers
+  const sections = [];
+  const parts    = text.split(/\n(?=═{15,})/);
+
+  parts.forEach(part => {
+    const trimmed = part.trim();
+    if (!trimmed) return;
+    const isScript  = /^═+\s*\nSCRIPT\s+\d+/i.test(trimmed) || /^SCRIPT\s+\d+/i.test(trimmed);
+    const isArticle = /ARTICLE OUTLINE/i.test(trimmed);
+    sections.push({ text: trimmed, type: isArticle ? 'article' : isScript ? 'script' : 'other' });
+  });
+
+  // If no structure detected, show as one block
+  if (sections.length <= 1) {
+    const id = 'sec-0';
+    outMap[id] = text;
+    document.getElementById('outputBody').innerHTML = `
+      <button class="copy-all-btn" onclick="copyAll()">Copy Everything</button>
+      <div class="output-section" id="${id}">
+        <div class="output-section-label">Full Output</div>
+        <button class="output-copy-btn" onclick="copySection('${id}')">Copy</button>
+        <pre class="output-pre">${esc(text)}</pre>
+      </div>`;
+    return;
+  }
+
+  outMap['all'] = text;
+  let html = `<button class="copy-all-btn" onclick="copySection('all')">Copy Everything</button>`;
+  sections.forEach((sec, i) => {
+    const id = 'sec-' + i;
+    outMap[id] = sec.text;
+    html += `
+      <div class="output-section${sec.type === 'article' ? ' article' : ''}" id="${id}">
+        <div class="output-section-label">${sec.type === 'article' ? '📝 Article Outlines' : sec.type === 'script' ? '🎬 Script' : '📄 Section'}</div>
+        <button class="output-copy-btn" onclick="copySection('${id}')">Copy</button>
+        <pre class="output-pre">${esc(sec.text)}</pre>
+      </div>`;
+  });
+
+  document.getElementById('outputBody').innerHTML = html;
+}
+
+function copySection(id) {
+  const text = outMap[id];
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector(`#${id} .output-copy-btn`) ||
+      document.querySelector('.copy-all-btn');
+    if (!btn) return;
+    const prev = btn.textContent;
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = prev; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    // Fallback: select the pre text
+    const pre = document.querySelector(`#${id} pre`);
+    if (pre) { const r = document.createRange(); r.selectNodeContents(pre); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  });
+}
+
+function copyAll() { copySection('all'); }
+
+function backToQueue() {
+  document.getElementById('outputPanel').style.display = 'none';
+  document.getElementById('queuePanel').style.display  = 'flex';
+}
+
+/* ── PROMPT BUILDERS ───────────────────────────────────────────── */
+function buildFullPrompt(picks) {
+  const topicList = picks.map((t, i) => `
+${i+1}. "${t.title}"
+   Category: ${t.category}${t.tzke ? ' — TZ/KE specific' : ''}
+   Why now: ${t.trendingBecause}
+   Michael's angle: ${t.michaelAngle}
+   Hook: "${t.hook}"
+   Contrarian take: ${t.angle || 'n/a'}`).join('\n');
+
+  return `You are Michael Kamukulu's content production team for LENZI — "Learning · Technology · Systems."
+
+MICHAEL'S VOICE & RULES:
+- Always first-person. Michael is the centre — never institutional, never "we as an organisation"
+- LearnImpact, KiuFunza, SOMA must NOT appear
+- One real anchor per script: a specific place, moment, or data point from his Tanzania/Kenya fieldwork
+- Bridge formula: start with "I" (personal, relatable moment) → land on "we" (systemic insight)
+- End every script with a line people will screenshot and share
+- For TZ/KE topics: ground in specific East African places, names, and realities; Swahili words are welcome when natural
+- Tone: authoritative but human — he has been in the rooms, seen the evidence, sat in the classrooms
+
+SELECTED TOPICS (${picks.length}):
+${topicList}
+
+For EACH topic, produce exactly this structure (use the ═══ dividers):
+
+════════════════════════════════════════════
+SCRIPT ${1}: [TOPIC TITLE]
+════════════════════════════════════════════
+
+🎬 HOOK (5 seconds — stops the scroll):
+[The single opening line — under 15 words. Direct. No setup.]
+
+👁 WHAT I'VE SEEN (8 seconds):
+[One grounded thing from Michael's fieldwork — a specific place, number, or moment]
+
+💡 MY POSITION (12 seconds):
+[The systems-level insight only Michael can deliver — plain language, no jargon]
+
+📱 SCREENSHOT LINE (5 seconds):
+[The line people save and share — must stand alone out of context]
+
+📹 B-ROLL NOTES:
+[2–3 specific free-stock search terms for Pexels or YouTube CC]
+
+CAPTIONS ─────────────────────────────────
+LinkedIn (stakes-framed, thought-leadership, 3–4 sentences):
+[caption]
+
+TikTok (raw, direct, no jargon; Swahili phrase welcome for TZ/KE topics):
+[caption]
+
+Instagram (personal, reflective, 2–3 sentences):
+[caption]
+
+X / Twitter (under 200 characters — the single sharpest line):
+[caption]
+
+Facebook / LENZI (Africa-future framing, community tone):
+[caption]
+
+YouTube Shorts (minimal + suggested thumbnail text in brackets):
+[caption]
+
+[Repeat structure for each selected topic — keep the ════ dividers between scripts]
+
+════════════════════════════════════════════
+ARTICLE OUTLINES — CHOOSE ONE TO DEVELOP
+════════════════════════════════════════════
+
+Generate 3 article outlines. For each:
+
+TITLE: [Compelling, Michael's voice, not institutional]
+HOOK PARAGRAPH (150 words, first-person, real anchor from fieldwork):
+[paragraph]
+5 KEY ARGUMENTS:
+1.
+2.
+3.
+4.
+5.
+VOICES/SOURCES TO REFERENCE: [2–3 named voices or institutions]
+MICHAEL'S CLOSING POSITION: [The stance the article argues]
+READING TIME: [estimate]
+
+Articles publish on LinkedIn Newsletter and michaelkamukulu.com.`;
+}
+
+function buildArticlePrompt(picks) {
+  const topicList = picks.map((t, i) =>
+    `${i+1}. "${t.title}" — ${t.trendingBecause} — Angle: ${t.michaelAngle}`
+  ).join('\n');
+
+  return `You are Michael Kamukulu's content team for LENZI — "Learning · Technology · Systems."
+
+Michael is a Tanzanian education leader, systems thinker, and policy practitioner with 10+ years inside Tanzania's education system. Articles are published on LinkedIn Newsletter and michaelkamukulu.com. Long-form, evidence-grounded, first-person, Michael-centred. LearnImpact/KiuFunza must NOT appear.
+
+SELECTED TOPICS:
+${topicList}
+
+Produce 3 distinct article outlines for Michael to choose from. For each:
+
+════════════════════════════════════════════
+ARTICLE OUTLINE [N]
+════════════════════════════════════════════
+
+TITLE:
+[Compelling, specific, Michael's voice]
+
+HOOK PARAGRAPH (~150 words, first-person, opens with a specific place/moment/person from Michael's fieldwork):
+[paragraph]
+
+5 KEY ARGUMENTS:
+1.
+2.
+3.
+4.
+5.
+
+VOICES & SOURCES:
+[2–3 specific named researchers, institutions, or publications to reference]
+
+MICHAEL'S CLOSING POSITION:
+[The central stance the article argues — one bold, clear sentence]
+
+ESTIMATED READING TIME: [minutes]`;
+}
+
+/* ── REFRESH ───────────────────────────────────────────────────── */
+function doRefresh() {
+  selected.clear();
+  renderQueue();
+  backToQueue();
+  topics = [];
+  document.getElementById('grid').innerHTML = `
+    <div class="skeleton skel-animated"><div class="skel-line w-80"></div><div class="skel-line w-40"></div></div>
+    <div class="skeleton skel-animated"><div class="skel-line w-60"></div><div class="skel-line w-40"></div></div>`;
+  setFreshness(null);
+  loadTopics();
+}
+
+/* ── SETTINGS ──────────────────────────────────────────────────── */
+function openSettings() {
+  const key = localStorage.getItem(KEY_STORE) || '';
+  document.getElementById('settingsKey').value = key;
+  document.getElementById('settingsTestResult').textContent = '';
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
+}
+function saveSettings() {
+  const key = document.getElementById('settingsKey').value.trim();
+  if (key) localStorage.setItem(KEY_STORE, key); else localStorage.removeItem(KEY_STORE);
+  closeSettings();
+}
+
+function saveOnboarding() {
+  const key = document.getElementById('obKey').value.trim();
+  if (key) localStorage.setItem(KEY_STORE, key);
+  localStorage.setItem(OB_STORE, '1');
+  document.getElementById('onboarding').classList.remove('open');
+}
+function skipOnboarding() {
+  localStorage.setItem(OB_STORE, '1');
+  document.getElementById('onboarding').classList.remove('open');
+}
+
+async function testKey(inputId, resultId) {
+  const key = document.getElementById(inputId).value.trim();
+  if (!key) return;
+  const el = document.getElementById(resultId);
+  el.className = 'test-result'; el.textContent = 'Testing…';
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 5,
+        messages: [{ role: 'user', content: 'Hi' }]
+      })
+    });
+    if (res.ok) {
+      el.className = 'test-result test-ok'; el.textContent = '✓ API key is valid';
+    } else {
+      const d = await res.json().catch(() => ({}));
+      el.className = 'test-result test-err'; el.textContent = '✗ ' + (d.error?.message || 'Invalid key');
+    }
+  } catch (e) {
+    el.className = 'test-result test-err'; el.textContent = '✗ Network error';
+  }
+}
+
+function toggleVis(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+/* ── HELPERS ───────────────────────────────────────────────────── */
+function flashHint(msg) {
+  const el = document.getElementById('queueHint');
+  if (!el) return;
+  const prev = el.textContent;
+  el.textContent = msg;
+  setTimeout(() => { el.textContent = prev; }, 2500);
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── DISMISS MODAL ON BACKDROP CLICK ──────────────────────────── */
+document.getElementById('settingsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
+
+/* ── START ─────────────────────────────────────────────────────── */
+boot();
+</script>
+</body>
+</html>
