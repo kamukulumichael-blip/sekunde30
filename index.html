@@ -118,17 +118,32 @@ a:hover { text-decoration:underline; }
 
 /* ── LAYOUT ────────────────────────────────────────────────────── */
 .layout {
-  display:grid;
-  grid-template-columns:1fr 300px;
+  display:flex;
   min-height:calc(100vh - var(--header-h));
 }
-.main-panel { padding:20px; overflow-x:hidden; }
+.main-panel { flex:1; min-width:0; padding:20px; overflow-x:hidden; }
+
+.resize-handle {
+  width:5px; flex-shrink:0; cursor:col-resize;
+  background:var(--border);
+  transition:background var(--t);
+  position:relative; z-index:10;
+}
+.resize-handle:hover, .resize-handle.dragging { background:var(--gold); }
+.resize-handle::after {
+  content:''; position:absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  width:3px; height:48px; border-radius:2px;
+  background:inherit; opacity:.6;
+}
+
 .side-panel {
+  width:380px; min-width:260px; max-width:55vw;
   border-left:1px solid var(--border);
   display:flex; flex-direction:column;
   position:sticky; top:var(--header-h);
   height:calc(100vh - var(--header-h));
-  overflow:hidden;
+  overflow:hidden; flex-shrink:0;
 }
 
 /* ── CREATOR PULSE ─────────────────────────────────────────────── */
@@ -686,8 +701,10 @@ a:hover { text-decoration:underline; }
 
 /* ── MOBILE ────────────────────────────────────────────────────── */
 @media (max-width:700px) {
-  .layout { grid-template-columns:1fr; }
+  .layout { flex-direction:column; }
+  .resize-handle { display:none; }
   .side-panel {
+    width:100% !important; min-width:unset; max-width:unset;
     position:static; height:auto;
     border-left:none; border-top:1px solid var(--border);
   }
@@ -846,8 +863,11 @@ a:hover { text-decoration:underline; }
     </div>
   </div>
 
+  <!-- RESIZE HANDLE -->
+  <div class="resize-handle" id="resizeHandle" title="Drag to resize"></div>
+
   <!-- RIGHT: SIDE PANEL -->
-  <div class="side-panel">
+  <div class="side-panel" id="sidePanel">
 
     <!-- Queue view -->
     <div class="queue-panel" id="queuePanel">
@@ -1764,7 +1784,44 @@ document.getElementById('settingsModal').addEventListener('click', function(e) {
   if (e.target === this) closeSettings();
 });
 
+/* ── RESIZABLE SIDE PANEL ──────────────────────────────────────── */
+function initResizable() {
+  const handle = document.getElementById('resizeHandle');
+  const side   = document.getElementById('sidePanel');
+  if (!handle || !side) return;
+
+  const saved = localStorage.getItem('s30_side_w');
+  if (saved) side.style.width = saved + 'px';
+
+  let dragging = false, startX = 0, startW = 0;
+
+  function onStart(x) {
+    dragging = true; startX = x; startW = side.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }
+  function onMove(x) {
+    if (!dragging) return;
+    const newW = Math.min(Math.max(260, startW + (startX - x)), window.innerWidth * 0.65);
+    side.style.width = newW + 'px';
+  }
+  function onEnd() {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    localStorage.setItem('s30_side_w', parseInt(side.style.width));
+  }
+
+  handle.addEventListener('mousedown',  e => { onStart(e.clientX); e.preventDefault(); });
+  document.addEventListener('mousemove', e => onMove(e.clientX));
+  document.addEventListener('mouseup',   onEnd);
+}
+
 /* ── START ─────────────────────────────────────────────────────── */
+initResizable();
 boot();
 </script>
 </body>
