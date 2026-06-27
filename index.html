@@ -490,6 +490,107 @@ a:hover { text-decoration:underline; }
   padding:12px;
 }
 
+/* ── FORMAT TABS ───────────────────────────────────────────────── */
+.fmt-tabs {
+  display:flex; border-bottom:1px solid var(--border);
+  background:var(--surface-2);
+}
+.fmt-tab {
+  flex:1; padding:8px 4px; font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em;
+  color:var(--text-3); background:none; border:none;
+  border-bottom:2px solid transparent; margin-bottom:-1px;
+  transition:all var(--t); cursor:pointer;
+}
+.fmt-tab:hover { color:var(--text-2); }
+.fmt-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+.fmt-pane { display:none; }
+.fmt-pane.active { display:block; }
+
+/* ── DATA ANCHORS ──────────────────────────────────────────────── */
+.data-row {
+  display:flex; flex-wrap:wrap; gap:5px; align-items:center;
+  padding:8px 12px; border-bottom:1px solid var(--border);
+  background:rgba(212,168,67,.04);
+}
+.data-row-label { font-size:9px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:.08em; margin-right:2px; flex-shrink:0; }
+.data-chip {
+  display:flex; align-items:center; gap:5px;
+  background:var(--surface-3); border:1px solid var(--gold-border);
+  border-radius:5px; padding:3px 8px; font-size:10px; color:var(--text-2);
+}
+.data-chip-stat { font-weight:500; }
+.data-chip-src { color:var(--gold); font-weight:600; }
+.verify-tag {
+  background:rgba(248,113,113,.15); border:1px solid rgba(248,113,113,.3);
+  color:#FCA5A5; border-radius:4px; padding:2px 6px;
+  font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+}
+.trending-ref {
+  padding:6px 12px; border-bottom:1px solid var(--border);
+  font-size:11px; color:var(--text-3); font-style:italic;
+  background:rgba(56,189,248,.04);
+}
+.trending-ref strong { color:var(--africa); font-style:normal; }
+
+/* ── TEXT POST ─────────────────────────────────────────────────── */
+.text-post-wrap { padding:12px; }
+.text-post-body {
+  font-size:12px; color:var(--text); line-height:1.7;
+  white-space:pre-wrap; word-break:break-word;
+  background:var(--surface); border-radius:6px;
+  padding:12px; border:1px solid var(--border-md); margin-bottom:10px;
+}
+.fmt-copy-btn {
+  width:100%; padding:9px; border-radius:var(--r-sm);
+  background:var(--surface-3); border:1px solid var(--border-md);
+  color:var(--text-2); font-size:11px; font-weight:600;
+  transition:all var(--t);
+}
+.fmt-copy-btn:hover { background:var(--gold); color:var(--bg); border-color:var(--gold); }
+.fmt-copy-btn.copied { background:var(--success); color:var(--bg); border-color:var(--success); }
+
+/* ── CAROUSEL ──────────────────────────────────────────────────── */
+.carousel-wrap { padding:12px; }
+.carousel-slides { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+.carousel-slide {
+  display:flex; gap:10px; align-items:flex-start;
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:7px; padding:10px 12px;
+}
+.slide-num {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--indigo,var(--surface-3)); color:var(--gold);
+  border:1px solid var(--gold-border);
+  font-size:10px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.slide-text { font-size:12px; color:var(--text); line-height:1.5; flex:1; }
+
+/* ── THREAD ────────────────────────────────────────────────────── */
+.thread-wrap { padding:12px; }
+.thread-list { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+.thread-tweet {
+  display:flex; gap:10px; align-items:flex-start;
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:7px; padding:10px 12px; position:relative;
+}
+.tweet-num {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--africa); color:var(--bg);
+  font-size:10px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.tweet-text { font-size:12px; color:var(--text); line-height:1.5; flex:1; }
+.tweet-copy-btn {
+  background:none; border:1px solid var(--border-md);
+  color:var(--text-3); border-radius:4px; padding:2px 7px;
+  font-size:10px; font-weight:600; flex-shrink:0;
+  transition:all var(--t);
+}
+.tweet-copy-btn:hover { border-color:var(--africa); color:var(--africa); }
+.tweet-copy-btn.copied { border-color:var(--success); color:var(--success); }
+
 /* ── GENERATING STATE ──────────────────────────────────────────── */
 .generating-state {
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -863,7 +964,6 @@ const CAT_EMOJI = {
 };
 
 function render() {
-  document.getElementById('skeletons').remove?.();
   document.getElementById('skeletons')?.remove();
 
   const filtered = filter === 'all' ? topics : topics.filter(t => t.category === filter);
@@ -1124,160 +1224,202 @@ async function startGenerate(mode) {
   }
 }
 
-function finalizeOutput(text, mode) {
+/* ── OUTPUT: JSON PARSER + RENDERERS ───────────────────────────── */
+function finalizeOutput(rawText, mode) {
   document.getElementById('outputTitle').textContent =
-    mode === 'full' ? 'Scripts + Article' : 'Article Outlines';
+    mode === 'full' ? 'Scripts + Formats' : 'Article Outlines';
 
-  outMap['all'] = text;
+  outMap['all'] = rawText;
 
-  // Split on runs of ═ characters
-  const rawParts = text.split(/═{10,}/).map(s => s.trim()).filter(Boolean);
+  // Strip markdown fences Claude sometimes adds
+  const cleaned = rawText.replace(/```json\s*/gi,'').replace(/```\s*/gi,'').trim();
+  const match   = cleaned.match(/\{[\s\S]*\}/);
 
-  const scripts  = [];
-  let articleRaw = '';
-
-  rawParts.forEach(part => {
-    if (/^SCRIPT\s+\d+/i.test(part))       scripts.push(parseScript(part));
-    else if (/ARTICLE OUTLINE/i.test(part)) articleRaw = part;
-  });
-
-  // Fallback: no ═══ structure found — show raw with single copy button
-  if (!scripts.length && !articleRaw) {
+  if (!match) {
+    // JSON not found — show raw with a single copy button
     document.getElementById('outputBody').innerHTML = `
       <button class="copy-all-btn" onclick="copyOut('all',this)">Copy Everything</button>
-      <div class="script-card">
-        <pre class="output-pre">${esc(text)}</pre>
-      </div>`;
+      <div class="script-card"><pre class="output-pre">${esc(rawText)}</pre></div>`;
     return;
   }
 
-  let html = `<button class="copy-all-btn" onclick="copyOut('all',this)">Copy Everything</button>`;
-  scripts.forEach((s, i) => { html += renderScriptCard(s, `sc${i}`); });
-  if (articleRaw) {
-    const aid = 'article0';
-    outMap[aid] = articleRaw;
-    html += `
-      <div class="script-card" id="${aid}">
-        <div class="sc-header">
-          <div class="sc-num article-num">Article</div>
-          <div class="sc-title">Outlines — choose 1 to develop</div>
-          <button class="sc-copy-btn" onclick="copyOut('${aid}',this)">Copy</button>
-        </div>
-        <pre class="output-pre">${esc(articleRaw)}</pre>
-      </div>`;
+  let data;
+  try { data = JSON.parse(match[0]); }
+  catch {
+    document.getElementById('outputBody').innerHTML = `
+      <button class="copy-all-btn" onclick="copyOut('all',this)">Copy Raw Output</button>
+      <div class="script-card"><pre class="output-pre" style="color:var(--error)">JSON parse error — raw output below:\n\n${esc(rawText)}</pre></div>`;
+    return;
   }
+
+  const scripts  = Array.isArray(data.scripts)  ? data.scripts  : [];
+  const articles = Array.isArray(data.articles) ? data.articles : [];
+
+  let html = `<button class="copy-all-btn" onclick="copyOut('all',this)">Copy Everything</button>`;
+  scripts.forEach((s, i)  => { html += renderScript(s,  `sc${i}`); });
+  articles.forEach((a, i) => { html += renderArticle(a, `ar${i}`); });
 
   document.getElementById('outputBody').innerHTML = html;
 }
 
-/* ── SCRIPT PARSER ─────────────────────────────────────────────── */
-function parseScript(text) {
-  const numMatch   = text.match(/SCRIPT\s+(\d+)/i);
-  const titleMatch = text.match(/SCRIPT\s+\d+[:\s]+([^\n]+)/i);
-  const num   = numMatch?.[1]   || '?';
-  const title = titleMatch?.[1]?.trim() || '';
+function renderScript(s, id) {
+  // Store copyable text variants
+  const scriptText = [s.hook, s.seen, s.position, s.screenshot_line].filter(Boolean).join('\n\n');
+  outMap[`${id}-script`] = `Script ${s.n}: ${s.title}\n\n${scriptText}`;
 
-  function between(startRe, endRe) {
-    const s = text.search(startRe);
-    if (s === -1) return '';
-    const colonPos = text.indexOf(':', s);
-    if (colonPos === -1) return '';
-    const e = endRe ? text.search(endRe) : -1;
-    const raw = (e > colonPos ? text.slice(colonPos + 1, e) : text.slice(colonPos + 1)).trim();
-    return raw;
-  }
+  const caps = s.captions || {};
+  Object.entries(caps).forEach(([k,v]) => { outMap[`${id}-cap-${k}`] = v; });
+  outMap[`${id}-allcaps`] = Object.entries(caps)
+    .map(([k,v]) => `${k.toUpperCase()}:\n${v}`).join('\n\n');
 
-  const hook       = between(/🎬/,  /👁/);
-  const seen       = between(/👁/,  /💡/);
-  const position   = between(/💡/,  /📱/);
-  const screenshot = between(/📱/,  /📹|CAPTIONS/i);
-  const broll      = between(/📹/,  /CAPTIONS/i);
+  outMap[`${id}-textpost`] = s.text_post || '';
+  outMap[`${id}-carousel`] = (s.carousel||[]).map((sl,i)=>`[${i+1}] ${sl}`).join('\n');
+  outMap[`${id}-thread`]   = (s.thread||[]).map((t,i)=>`${i+1}/ ${t}`).join('\n\n');
+  outMap[`${id}-raw`]      = JSON.stringify(s, null, 2);
 
-  // Captions
-  const capStart = text.search(/CAPTIONS/i);
-  const capBlock = capStart !== -1 ? text.slice(capStart) : '';
+  // Data anchors
+  const anchors = (s.data_anchors||[]).map(a => `
+    <div class="data-chip">
+      <span class="data-chip-stat">${esc(a.stat)}</span>
+      <span class="data-chip-src">${esc(a.source)}</span>
+      ${!a.verified ? `<span class="verify-tag">VERIFY</span>` : ''}
+    </div>`).join('');
 
-  const PLATFORMS = [
-    { key:'linkedin',  label:'LinkedIn'       },
-    { key:'tiktok',    label:'TikTok'         },
-    { key:'instagram', label:'Instagram'       },
-    { key:'x',         label:'X / Twitter'    },
-    { key:'facebook',  label:'Facebook'        },
-    { key:'youtube',   label:'YouTube Shorts'  },
-  ];
+  const trendingHtml = s.trending_ref
+    ? `<div class="trending-ref"><strong>Now:</strong> ${esc(s.trending_ref)}</div>` : '';
 
-  const captions = {};
-  PLATFORMS.forEach((plat, i) => {
-    const re = new RegExp(plat.label.split(' ')[0] + '[^:\\n]*:', 'i');
-    const match = capBlock.match(re);
-    if (!match) return;
-    const start = capBlock.indexOf(match[0]) + match[0].length;
-    let end = capBlock.length;
-    PLATFORMS.slice(i + 1).forEach(next => {
-      const nr = new RegExp(next.label.split(' ')[0] + '[^:\\n]*:', 'i');
-      const nm = capBlock.search(nr);
-      if (nm > start && nm < end) end = nm;
-    });
-    const val = capBlock.slice(start, end).trim();
-    if (val) captions[plat.key] = { label: plat.label, text: val };
-  });
-
-  return { num, title, hook, seen, position, screenshot, broll, captions, raw: text };
-}
-
-/* ── SCRIPT CARD RENDERER ──────────────────────────────────────── */
-function renderScriptCard(s, id) {
-  const scriptOnly = [s.hook, s.seen, s.position, s.screenshot].filter(Boolean).join('\n\n');
-  outMap[id + '-script'] = `Script ${s.num}: ${s.title}\n\n${scriptOnly}`;
-  outMap[id + '-raw']    = s.raw;
-  Object.entries(s.captions).forEach(([k, c]) => { outMap[`${id}-${k}`] = c.text; });
-
-  const parts = [
-    { cls:'hook',       icon:'🎬', label:'Hook (5s)',           text: s.hook },
-    { cls:'seen',       icon:'👁', label:"What I've Seen (8s)", text: s.seen },
-    { cls:'position',   icon:'💡', label:'My Position (12s)',   text: s.position },
-    { cls:'screenshot', icon:'📱', label:'Screenshot Line (5s)',text: s.screenshot },
-    { cls:'broll',      icon:'📹', label:'B-Roll',               text: s.broll },
+  // VIDEO tab
+  const videoParts = [
+    { cls:'hook',       icon:'🎬', label:'Hook (5s)',            text: s.hook },
+    { cls:'seen',       icon:'👁', label:"What I've Seen (8s)",  text: s.seen },
+    { cls:'position',   icon:'💡', label:'My Position (12s)',    text: s.position },
+    { cls:'screenshot', icon:'📱', label:'Screenshot Line (5s)', text: s.screenshot_line },
+    { cls:'broll',      icon:'📹', label:'B-Roll searches',      text: Array.isArray(s.broll) ? s.broll.join(' · ') : s.broll },
   ].filter(p => p.text);
 
-  const partsHtml = parts.map(p => `
-    <div class="sp sp-${p.cls}">
-      <div class="sp-label">${p.icon} ${p.label}</div>
-      <div class="sp-text">${esc(p.text)}</div>
-    </div>`).join('');
-
-  const capRows = Object.entries(s.captions).map(([k, c]) => `
-    <div class="cap-row">
-      <div class="cap-plat">${c.label}</div>
-      <div class="cap-text">${esc(c.text)}</div>
-      <button class="cap-btn" onclick="copyOut('${id}-${k}',this)">Copy</button>
-    </div>`).join('');
-
-  const capsSection = capRows ? `
+  const videoHtml = `
+    <div class="sc-parts">
+      ${videoParts.map(p=>`
+        <div class="sp sp-${p.cls}">
+          <div class="sp-label">${p.icon} ${p.label}</div>
+          <div class="sp-text">${esc(p.text)}</div>
+        </div>`).join('')}
+    </div>
     <div class="sc-captions">
       <div class="sc-captions-hdr">
         <span>Captions</span>
-        <button class="sc-cap-all-btn" onclick="copyOut('${id}-raw',this)">Copy All</button>
+        <button class="sc-cap-all-btn" onclick="copyOut('${id}-allcaps',this)">Copy All</button>
       </div>
-      ${capRows}
-    </div>` : '';
+      ${[
+        ['linkedin','LinkedIn'],['tiktok','TikTok'],['instagram','Instagram'],
+        ['x','X / Twitter'],['facebook','Facebook'],['youtube','YouTube Shorts']
+      ].filter(([k])=>caps[k]).map(([k,label])=>`
+        <div class="cap-row">
+          <div class="cap-plat">${label}</div>
+          <div class="cap-text">${esc(caps[k])}</div>
+          <button class="cap-btn" onclick="copyOut('${id}-cap-${k}',this)">Copy</button>
+        </div>`).join('')}
+    </div>`;
+
+  // TEXT POST tab
+  const textPostHtml = s.text_post ? `
+    <div class="text-post-wrap">
+      <div class="text-post-body">${esc(s.text_post)}</div>
+      <button class="fmt-copy-btn" onclick="copyOut('${id}-textpost',this)">Copy Text Post</button>
+    </div>` : `<div style="padding:16px;color:var(--text-3);font-size:12px">Not generated for this topic.</div>`;
+
+  // CAROUSEL tab
+  const carouselHtml = s.carousel?.length ? `
+    <div class="carousel-wrap">
+      <div class="carousel-slides">
+        ${s.carousel.map((sl,i)=>`
+          <div class="carousel-slide">
+            <div class="slide-num">${i+1}</div>
+            <div class="slide-text">${esc(sl)}</div>
+          </div>`).join('')}
+      </div>
+      <button class="fmt-copy-btn" onclick="copyOut('${id}-carousel',this)">Copy All Slides</button>
+    </div>` : `<div style="padding:16px;color:var(--text-3);font-size:12px">Not generated.</div>`;
+
+  // THREAD tab
+  const threadHtml = s.thread?.length ? `
+    <div class="thread-wrap">
+      <div class="thread-list">
+        ${s.thread.map((tw,i)=>{
+          const twId=`${id}-tw${i}`;
+          outMap[twId]=tw;
+          return `
+            <div class="thread-tweet">
+              <div class="tweet-num">${i+1}</div>
+              <div class="tweet-text">${esc(tw)}</div>
+              <button class="tweet-copy-btn" onclick="copyOut('${twId}',this)">Copy</button>
+            </div>`;
+        }).join('')}
+      </div>
+      <button class="fmt-copy-btn" onclick="copyOut('${id}-thread',this)">Copy Full Thread</button>
+    </div>` : `<div style="padding:16px;color:var(--text-3);font-size:12px">Not generated.</div>`;
 
   return `
     <div class="script-card" id="${id}">
       <div class="sc-header">
-        <div class="sc-num">Script ${s.num}</div>
+        <div class="sc-num">Script ${s.n}</div>
         <div class="sc-title">${esc(s.title)}</div>
         <button class="sc-copy-btn" onclick="copyOut('${id}-script',this)">Copy Script</button>
       </div>
-      <div class="sc-parts">${partsHtml}</div>
-      ${capsSection}
+      ${anchors ? `<div class="data-row"><span class="data-row-label">Data</span>${anchors}</div>` : ''}
+      ${trendingHtml}
+      <div class="fmt-tabs">
+        <button class="fmt-tab active" onclick="showTab('${id}','video',this)">🎬 Video</button>
+        <button class="fmt-tab" onclick="showTab('${id}','text',this)">✏️ Text Post</button>
+        <button class="fmt-tab" onclick="showTab('${id}','carousel',this)">📸 Carousel</button>
+        <button class="fmt-tab" onclick="showTab('${id}','thread',this)">🧵 Thread</button>
+      </div>
+      <div id="${id}-video" class="fmt-pane active">${videoHtml}</div>
+      <div id="${id}-text"  class="fmt-pane">${textPostHtml}</div>
+      <div id="${id}-carousel" class="fmt-pane">${carouselHtml}</div>
+      <div id="${id}-thread"   class="fmt-pane">${threadHtml}</div>
     </div>`;
+}
+
+function renderArticle(a, id) {
+  const fullText = [
+    `TITLE: ${a.title}`,
+    `\nOPENING:\n${a.hook_paragraph}`,
+    `\nARGUMENTS:\n${(a.arguments||[]).map((x,i)=>`${i+1}. ${x}`).join('\n')}`,
+    `\nSOURCES:\n${(a.sources||[]).join('\n')}`,
+    `\nCLOSING POSITION:\n${a.closing_position}`,
+    `\nREADING TIME: ${a.read_time}`
+  ].join('');
+  outMap[id] = fullText;
+
+  return `
+    <div class="script-card" id="${id}">
+      <div class="sc-header">
+        <div class="sc-num article-num">Article</div>
+        <div class="sc-title">${esc(a.title||'Article Outline')}</div>
+        <button class="sc-copy-btn" onclick="copyOut('${id}',this)">Copy</button>
+      </div>
+      <div class="sc-parts">
+        ${a.hook_paragraph ? `<div class="sp sp-seen"><div class="sp-label">Opening paragraph</div><div class="sp-text">${esc(a.hook_paragraph)}</div></div>` : ''}
+        ${(a.arguments||[]).length ? `<div class="sp sp-position"><div class="sp-label">5 Arguments</div><div class="sp-text">${(a.arguments||[]).map((x,i)=>`<div style="margin-bottom:6px"><strong style="color:var(--gold)">${i+1}.</strong> ${esc(x)}</div>`).join('')}</div></div>` : ''}
+        ${(a.sources||[]).length ? `<div class="sp sp-broll"><div class="sp-label">Sources</div><div class="sp-text">${(a.sources||[]).map(x=>esc(x)).join('<br>')}</div></div>` : ''}
+        ${a.closing_position ? `<div class="sp sp-screenshot"><div class="sp-label">Closing position</div><div class="sp-text">${esc(a.closing_position)}</div></div>` : ''}
+      </div>
+    </div>`;
+}
+
+function showTab(cardId, tab, btn) {
+  // Deactivate all panes and tabs in this card
+  document.querySelectorAll(`#${cardId} .fmt-pane`).forEach(p => p.classList.remove('active'));
+  document.querySelectorAll(`#${cardId} .fmt-tab`).forEach(t => t.classList.remove('active'));
+  document.getElementById(`${cardId}-${tab}`)?.classList.add('active');
+  btn.classList.add('active');
 }
 
 /* ── COPY HELPER ───────────────────────────────────────────────── */
 function copyOut(id, btn) {
   const text = outMap[id];
-  if (!text) return;
+  if (!text) { if(btn){const p=btn.textContent;btn.textContent='—';setTimeout(()=>{btn.textContent=p;},1500);} return; }
   navigator.clipboard.writeText(text).then(() => {
     if (!btn) return;
     const prev = btn.textContent;
@@ -1285,14 +1427,12 @@ function copyOut(id, btn) {
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = prev; btn.classList.remove('copied'); }, 2000);
   }).catch(() => {
-    // Select-all fallback for browsers blocking clipboard
     try {
       const tmp = document.createElement('textarea');
-      tmp.value = text; tmp.style.position = 'fixed'; tmp.style.opacity = '0';
+      tmp.value = text; tmp.style.cssText = 'position:fixed;opacity:0';
       document.body.appendChild(tmp); tmp.select();
-      document.execCommand('copy');
-      document.body.removeChild(tmp);
-      if (btn) { const p=btn.textContent; btn.textContent='✓'; setTimeout(()=>{btn.textContent=p;},2000); }
+      document.execCommand('copy'); document.body.removeChild(tmp);
+      if (btn) { const p=btn.textContent; btn.textContent='✓'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent=p;btn.classList.remove('copied');},2000); }
     } catch {}
   });
 }
@@ -1302,92 +1442,127 @@ function backToQueue() {
   document.getElementById('queuePanel').style.display  = 'flex';
 }
 
+/* ── MICHAEL'S VOICE FINGERPRINT ───────────────────────────────── */
+const VOICE = `
+MICHAEL KAMUKULU — MANDATORY VOICE & STYLE GUIDE
+=================================================
+Michael is not a commentator. He is the person who has been inside the room, the ministry meeting, the classroom. He speaks from direct experience and verified evidence. He gives the uncomfortable truth the report omits.
+
+OPENING PATTERNS (rotate — never start the same way twice):
+• Insider Reveal: "I've been in [specific Tanzanian/Kenyan place]. I've seen [specific thing]. Here's what the headline misses."
+• False Binary: "Everyone is debating [X]. That is not the real question."
+• Number Reframe: "[Verified statistic]. That number gets quoted everywhere. Nobody explains what it actually means."
+• Quiet Admission: "I spent [X years] believing [conventional wisdom]. Then I saw the data."
+• Direct Challenge: "If you work in [field] in Africa — this conversation is about you."
+
+PIVOT LANGUAGE (how Michael moves from personal to systemic):
+• "That is not about [individual]. That is about the system that produced [individual]."
+• "The village already knows the answer. The policy has not asked the village."
+• "The distance between what the report says and what the classroom shows — that distance is where children are lost."
+
+CLOSING LINE PATTERNS (must work alone as a screenshot):
+• "The question is not [obvious question]. The question is [sharper, systems-level question]."
+• "That is not a [X] failure. That is exactly what [X] was designed to do."
+• "The work is real. The results are real. The only thing missing is a system that wants them."
+• A single reframing sentence that lands differently after the video than it would without context.
+
+LANGUAGE RULES:
+• Evidence first, opinion second. Cite the source before giving the take.
+• Specific beats general always: "Dodoma" not "Tanzania". "Grade 3 reading scores" not "education outcomes".
+• Never use: "amazing", "incredible", "powerful", "impactful", "game-changing", "journey"
+• Never say: "we need to have a conversation about" — start the conversation, do not announce it
+• Never use deficit framing: not "Africa struggles" but "Africa is building something the world has not seen"
+• Swahili is welcome naturally in TikTok and Facebook captions: "Ndio, lakini...", "Ukweli ni huu:", "Sisi wenyewe..."
+• LinkedIn and X: English only, but with the directness of someone who thinks in both languages
+
+DATA DISCIPLINE — NON-NEGOTIABLE:
+• Every statistic must cite its source inline: "[Stat]" then immediately "(Source: [Name, Year])"
+• If approximating: write "Approximately [X]" and add the note [VERIFY BEFORE PUBLISHING]
+• Personal field observations need no citation: "In the 700+ schools I have worked across..."
+• Never round numbers up to strengthen a point — use the actual figure or say "roughly"
+• If you are uncertain about a data point, flag it: [VERIFY BEFORE PUBLISHING]
+
+TRENDING REFERENCES:
+• Each script must reference something real and current: a speech, a report, a UN statement, a policy decision, a news story from the week of generation
+• Global + local: pair an international reference with a Tanzania or Kenya-specific reality
+• Name the source: "According to the World Bank's June 2026 report..." not "research shows..."
+`;
+
 /* ── PROMPT BUILDERS ───────────────────────────────────────────── */
 function buildFullPrompt(picks) {
   const topicList = picks.map((t, i) => `
-${i+1}. "${t.title}"
-   Category: ${t.category}${t.tzke ? ' — TZ/KE specific' : ''}
-   Why now: ${t.trendingBecause}
-   Michael's angle: ${t.michaelAngle}
-   Hook: "${t.hook}"
-   Contrarian take: ${t.angle || 'n/a'}`).join('\n');
+Topic ${i+1}: "${t.title}"
+Category: ${t.category}${t.tzke ? ' [TZ/KE — ground in Tanzania/Kenya reality, Swahili welcome in TikTok/Facebook]' : ''}
+Why now: ${t.trendingBecause}
+Michael's angle: ${t.michaelAngle}
+Suggested hook: "${t.hook}"
+Contrarian take: ${t.angle || 'derive from topic'}`).join('\n');
 
-  return `You are Michael Kamukulu's content production team for LENZI — "Learning · Technology · Systems."
+  return `${VOICE}
 
-MICHAEL'S VOICE & RULES:
-- Always first-person. Michael is the centre — never institutional, never "we as an organisation"
-- LearnImpact, KiuFunza, SOMA must NOT appear
-- One real anchor per script: a specific place, moment, or data point from his Tanzania/Kenya fieldwork
-- Bridge formula: start with "I" (personal, relatable moment) → land on "we" (systemic insight)
-- End every script with a line people will screenshot and share
-- For TZ/KE topics: ground in specific East African places, names, and realities; Swahili words are welcome when natural
-- Tone: authoritative but human — he has been in the rooms, seen the evidence, sat in the classrooms
+You are generating production-ready content for Michael Kamukulu's LENZI brand — "Learning, Technology, Systems."
 
 SELECTED TOPICS (${picks.length}):
 ${topicList}
 
-For EACH topic, produce exactly this structure (use the ═══ dividers):
+OUTPUT INSTRUCTIONS:
+Return ONLY a single valid JSON object. No markdown. No explanation. No code fences. Just the raw JSON.
+If you are uncertain about any statistic, set "verified": false and include "[VERIFY BEFORE PUBLISHING]" in the stat text.
 
-════════════════════════════════════════════
-SCRIPT ${1}: [TOPIC TITLE]
-════════════════════════════════════════════
+JSON SCHEMA (produce EXACTLY this structure):
+{
+  "scripts": [
+    {
+      "n": 1,
+      "title": "topic title from above",
+      "category": "category",
+      "data_anchors": [
+        {"stat": "Specific statistic with number", "source": "Source Name Year", "verified": true}
+      ],
+      "trending_ref": "One sentence referencing a real, current global or EAC event, report, or speech relevant to this topic",
+      "hook": "Under 15 words. First person. Stops the scroll. No throat-clearing.",
+      "seen": "What Michael has literally seen in his fieldwork — specific place, number, or moment. Under 40 words.",
+      "position": "The systems-level insight. Under 50 words. Plain language. No jargon.",
+      "screenshot_line": "The line people screenshot and share. Under 20 words. Must land alone out of context.",
+      "broll": ["stock search term 1", "stock search term 2", "stock search term 3"],
+      "captions": {
+        "linkedin": "Stakes-framed thought-leadership. 3-4 sentences. Start with the hook, land on the implication.",
+        "tiktok": "Raw, direct, no jargon. Natural Swahili phrase for TZ/KE topics.",
+        "instagram": "Personal, reflective. 2-3 sentences. More human than LinkedIn.",
+        "x": "Under 200 characters. The single sharpest line from the script.",
+        "facebook": "Africa-future framing. Community tone. 2-3 sentences.",
+        "youtube": "Minimal. Then add: [THUMBNAIL: bold 3-4 word text for the thumbnail]"
+      },
+      "text_post": "200-250 word LinkedIn or Facebook text post. First person. Opens with a real anchor. Builds to a systems insight. Ends with a question or call to action. No bullet points — flowing prose only.",
+      "carousel": [
+        "Slide 1: The hook — 1 bold statement under 10 words",
+        "Slide 2: The problem framed as a fact, not a complaint",
+        "Slide 3: What Michael has seen from the inside",
+        "Slide 4: The reframe or systems insight",
+        "Slide 5: The closing line + follow for more"
+      ],
+      "thread": [
+        "Tweet 1: The hook — must make people want to read the rest",
+        "Tweet 2: The evidence or data point with source",
+        "Tweet 3: What this actually means in practice",
+        "Tweet 4: The counter-intuitive insight",
+        "Tweet 5: The closing position — bold and quotable"
+      ]
+    }
+  ],
+  "articles": [
+    {
+      "title": "Compelling, specific, Michael's voice",
+      "hook_paragraph": "150 words. First person. Opens with a specific place, moment, or person from Michael's fieldwork. Not a thesis statement — a scene.",
+      "arguments": ["Argument 1 with evidence", "Argument 2", "Argument 3", "Argument 4", "Argument 5 — the strongest, last"],
+      "sources": ["Named source 1 (institution, year)", "Named source 2", "Named source 3"],
+      "closing_position": "The central stance the article argues — one bold, clear sentence",
+      "read_time": "X min"
+    }
+  ]
+}
 
-🎬 HOOK (5 seconds — stops the scroll):
-[The single opening line — under 15 words. Direct. No setup.]
-
-👁 WHAT I'VE SEEN (8 seconds):
-[One grounded thing from Michael's fieldwork — a specific place, number, or moment]
-
-💡 MY POSITION (12 seconds):
-[The systems-level insight only Michael can deliver — plain language, no jargon]
-
-📱 SCREENSHOT LINE (5 seconds):
-[The line people save and share — must stand alone out of context]
-
-📹 B-ROLL NOTES:
-[2–3 specific free-stock search terms for Pexels or YouTube CC]
-
-CAPTIONS ─────────────────────────────────
-LinkedIn (stakes-framed, thought-leadership, 3–4 sentences):
-[caption]
-
-TikTok (raw, direct, no jargon; Swahili phrase welcome for TZ/KE topics):
-[caption]
-
-Instagram (personal, reflective, 2–3 sentences):
-[caption]
-
-X / Twitter (under 200 characters — the single sharpest line):
-[caption]
-
-Facebook / LENZI (Africa-future framing, community tone):
-[caption]
-
-YouTube Shorts (minimal + suggested thumbnail text in brackets):
-[caption]
-
-[Repeat structure for each selected topic — keep the ════ dividers between scripts]
-
-════════════════════════════════════════════
-ARTICLE OUTLINES — CHOOSE ONE TO DEVELOP
-════════════════════════════════════════════
-
-Generate 3 article outlines. For each:
-
-TITLE: [Compelling, Michael's voice, not institutional]
-HOOK PARAGRAPH (150 words, first-person, real anchor from fieldwork):
-[paragraph]
-5 KEY ARGUMENTS:
-1.
-2.
-3.
-4.
-5.
-VOICES/SOURCES TO REFERENCE: [2–3 named voices or institutions]
-MICHAEL'S CLOSING POSITION: [The stance the article argues]
-READING TIME: [estimate]
-
-Articles publish on LinkedIn Newsletter and michaelkamukulu.com.`;
+Generate ${picks.length} scripts and 3 article outlines. Each script covers one topic in order.`;
 }
 
 function buildArticlePrompt(picks) {
@@ -1395,39 +1570,27 @@ function buildArticlePrompt(picks) {
     `${i+1}. "${t.title}" — ${t.trendingBecause} — Angle: ${t.michaelAngle}`
   ).join('\n');
 
-  return `You are Michael Kamukulu's content team for LENZI — "Learning · Technology · Systems."
+  return `${VOICE}
 
-Michael is a Tanzanian education leader, systems thinker, and policy practitioner with 10+ years inside Tanzania's education system. Articles are published on LinkedIn Newsletter and michaelkamukulu.com. Long-form, evidence-grounded, first-person, Michael-centred. LearnImpact/KiuFunza must NOT appear.
+Generate 3 article outlines for Michael Kamukulu's LinkedIn Newsletter and michaelkamukulu.com.
 
-SELECTED TOPICS:
+TOPICS:
 ${topicList}
 
-Produce 3 distinct article outlines for Michael to choose from. For each:
-
-════════════════════════════════════════════
-ARTICLE OUTLINE [N]
-════════════════════════════════════════════
-
-TITLE:
-[Compelling, specific, Michael's voice]
-
-HOOK PARAGRAPH (~150 words, first-person, opens with a specific place/moment/person from Michael's fieldwork):
-[paragraph]
-
-5 KEY ARGUMENTS:
-1.
-2.
-3.
-4.
-5.
-
-VOICES & SOURCES:
-[2–3 specific named researchers, institutions, or publications to reference]
-
-MICHAEL'S CLOSING POSITION:
-[The central stance the article argues — one bold, clear sentence]
-
-ESTIMATED READING TIME: [minutes]`;
+Return ONLY valid JSON, no markdown, no explanation:
+{
+  "articles": [
+    {
+      "title": "Compelling title in Michael's voice",
+      "hook_paragraph": "~150 words. First person. Opens with a specific Tanzanian or Kenyan place, moment, or person from Michael's fieldwork.",
+      "arguments": ["Argument 1 with evidence and source", "Argument 2", "Argument 3", "Argument 4", "Argument 5 — the strongest"],
+      "sources": ["Source 1 (name, institution, year)", "Source 2", "Source 3"],
+      "closing_position": "The single bold stance the article argues",
+      "read_time": "X min"
+    }
+  ]
+}
+Generate 3 distinct article outlines.`;
 }
 
 /* ── REFRESH ───────────────────────────────────────────────────── */
