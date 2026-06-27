@@ -393,28 +393,7 @@ a:hover { text-decoration:underline; }
 }
 .output-cursor { display:inline-block; width:2px; height:14px; background:var(--gold); vertical-align:text-bottom; animation:blink .9s step-end infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.output-section {
-  background:var(--surface-2); border:1px solid var(--border-md);
-  border-radius:var(--r-sm); padding:13px; margin-bottom:10px; position:relative;
-}
-.output-section-label {
-  font-size:10px; font-weight:700; text-transform:uppercase;
-  letter-spacing:.08em; color:var(--gold); margin-bottom:8px;
-}
-.output-section.article .output-section-label { color:var(--africa); }
-.output-pre {
-  font-family:var(--mono); font-size:11px; white-space:pre-wrap;
-  word-break:break-word; line-height:1.7; color:var(--text-2);
-}
-.output-copy-btn {
-  position:absolute; top:10px; right:10px;
-  background:var(--surface-3); border:1px solid var(--border-md);
-  color:var(--text-3); border-radius:5px; padding:3px 8px;
-  font-size:10px; font-weight:600; transition:all var(--t);
-}
-.output-copy-btn:hover { background:var(--gold); color:var(--bg); border-color:var(--gold); }
-.output-copy-btn.copied { background:var(--success); color:var(--bg); border-color:var(--success); }
-
+/* ── SCRIPT CARDS (output panel) ───────────────────────────────── */
 .copy-all-btn {
   width:100%; padding:10px; border-radius:var(--r-sm);
   background:var(--surface-2); border:1px solid var(--border-md);
@@ -422,6 +401,94 @@ a:hover { text-decoration:underline; }
   margin-bottom:12px; transition:all var(--t);
 }
 .copy-all-btn:hover { background:var(--surface-3); color:var(--text); }
+.copy-all-btn.copied { background:var(--success); color:var(--bg); border-color:var(--success); }
+
+.script-card {
+  background:var(--surface-2); border:1px solid var(--border-md);
+  border-radius:var(--r-md); margin-bottom:12px; overflow:hidden;
+}
+.sc-header {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 12px; border-bottom:1px solid var(--border);
+  background:var(--surface-3);
+}
+.sc-num {
+  background:var(--gold); color:var(--bg); border-radius:5px;
+  padding:2px 8px; font-size:10px; font-weight:800;
+  text-transform:uppercase; letter-spacing:.05em; flex-shrink:0;
+}
+.sc-num.article-num { background:var(--africa); }
+.sc-title {
+  flex:1; font-size:12px; font-weight:600; color:var(--text);
+  line-height:1.3; min-width:0; overflow:hidden;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+}
+.sc-copy-btn {
+  background:var(--gold); color:var(--bg); border:none;
+  border-radius:5px; padding:5px 10px;
+  font-size:10px; font-weight:700; flex-shrink:0; transition:all var(--t);
+}
+.sc-copy-btn:hover { background:var(--gold-lt); }
+.sc-copy-btn.copied { background:var(--success); }
+
+.sc-parts { padding:10px 12px; display:flex; flex-direction:column; gap:7px; }
+.sp {
+  background:var(--surface); border-radius:6px;
+  border-left:2px solid var(--border-hi); padding:8px 10px;
+}
+.sp-hook     { border-left-color:var(--gold); }
+.sp-seen     { border-left-color:var(--text-3); }
+.sp-position { border-left-color:var(--africa); }
+.sp-screenshot { border-left-color:var(--employ); }
+.sp-broll    { border-left-color:var(--surface-3); }
+.sp-label {
+  font-size:9px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--text-3); margin-bottom:4px;
+}
+.sp-text { font-size:12px; color:var(--text); line-height:1.55; }
+.sp-screenshot .sp-text { font-weight:600; font-style:italic; color:var(--gold); }
+
+.sc-captions { border-top:1px solid var(--border); }
+.sc-captions-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 12px; border-bottom:1px solid var(--border);
+}
+.sc-captions-hdr span {
+  font-size:9px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--text-3);
+}
+.sc-cap-all-btn {
+  background:none; border:1px solid var(--border-md);
+  color:var(--text-3); border-radius:4px; padding:2px 8px;
+  font-size:10px; font-weight:600; transition:all var(--t);
+}
+.sc-cap-all-btn:hover { border-color:var(--border-hi); color:var(--text); }
+.sc-cap-all-btn.copied { color:var(--success); border-color:var(--success); }
+
+.cap-row {
+  display:flex; align-items:flex-start; gap:8px;
+  padding:7px 12px; border-bottom:1px solid var(--border);
+}
+.cap-row:last-child { border-bottom:none; }
+.cap-plat {
+  font-size:9px; font-weight:700; color:var(--text-3);
+  text-transform:uppercase; letter-spacing:.04em;
+  width:64px; flex-shrink:0; padding-top:2px;
+}
+.cap-text { flex:1; font-size:11px; color:var(--text-2); line-height:1.5; min-width:0; }
+.cap-btn {
+  background:var(--surface-3); border:1px solid var(--border-md);
+  color:var(--text-3); border-radius:4px; padding:3px 8px;
+  font-size:10px; font-weight:600; flex-shrink:0; transition:all var(--t);
+}
+.cap-btn:hover { background:var(--gold); color:var(--bg); border-color:var(--gold); }
+.cap-btn.copied { background:var(--success); color:var(--bg); border-color:var(--success); }
+
+.output-pre {
+  font-family:var(--mono); font-size:11px; white-space:pre-wrap;
+  word-break:break-word; line-height:1.7; color:var(--text-2);
+  padding:12px;
+}
 
 /* ── GENERATING STATE ──────────────────────────────────────────── */
 .generating-state {
@@ -1061,67 +1128,174 @@ function finalizeOutput(text, mode) {
   document.getElementById('outputTitle').textContent =
     mode === 'full' ? 'Scripts + Article' : 'Article Outlines';
 
-  // Split into sections on the ═══ dividers
-  const sections = [];
-  const parts    = text.split(/\n(?=═{15,})/);
+  outMap['all'] = text;
 
-  parts.forEach(part => {
-    const trimmed = part.trim();
-    if (!trimmed) return;
-    const isScript  = /^═+\s*\nSCRIPT\s+\d+/i.test(trimmed) || /^SCRIPT\s+\d+/i.test(trimmed);
-    const isArticle = /ARTICLE OUTLINE/i.test(trimmed);
-    sections.push({ text: trimmed, type: isArticle ? 'article' : isScript ? 'script' : 'other' });
+  // Split on runs of ═ characters
+  const rawParts = text.split(/═{10,}/).map(s => s.trim()).filter(Boolean);
+
+  const scripts  = [];
+  let articleRaw = '';
+
+  rawParts.forEach(part => {
+    if (/^SCRIPT\s+\d+/i.test(part))       scripts.push(parseScript(part));
+    else if (/ARTICLE OUTLINE/i.test(part)) articleRaw = part;
   });
 
-  // If no structure detected, show as one block
-  if (sections.length <= 1) {
-    const id = 'sec-0';
-    outMap[id] = text;
+  // Fallback: no ═══ structure found — show raw with single copy button
+  if (!scripts.length && !articleRaw) {
     document.getElementById('outputBody').innerHTML = `
-      <button class="copy-all-btn" onclick="copyAll()">Copy Everything</button>
-      <div class="output-section" id="${id}">
-        <div class="output-section-label">Full Output</div>
-        <button class="output-copy-btn" onclick="copySection('${id}')">Copy</button>
+      <button class="copy-all-btn" onclick="copyOut('all',this)">Copy Everything</button>
+      <div class="script-card">
         <pre class="output-pre">${esc(text)}</pre>
       </div>`;
     return;
   }
 
-  outMap['all'] = text;
-  let html = `<button class="copy-all-btn" onclick="copySection('all')">Copy Everything</button>`;
-  sections.forEach((sec, i) => {
-    const id = 'sec-' + i;
-    outMap[id] = sec.text;
+  let html = `<button class="copy-all-btn" onclick="copyOut('all',this)">Copy Everything</button>`;
+  scripts.forEach((s, i) => { html += renderScriptCard(s, `sc${i}`); });
+  if (articleRaw) {
+    const aid = 'article0';
+    outMap[aid] = articleRaw;
     html += `
-      <div class="output-section${sec.type === 'article' ? ' article' : ''}" id="${id}">
-        <div class="output-section-label">${sec.type === 'article' ? '📝 Article Outlines' : sec.type === 'script' ? '🎬 Script' : '📄 Section'}</div>
-        <button class="output-copy-btn" onclick="copySection('${id}')">Copy</button>
-        <pre class="output-pre">${esc(sec.text)}</pre>
+      <div class="script-card" id="${aid}">
+        <div class="sc-header">
+          <div class="sc-num article-num">Article</div>
+          <div class="sc-title">Outlines — choose 1 to develop</div>
+          <button class="sc-copy-btn" onclick="copyOut('${aid}',this)">Copy</button>
+        </div>
+        <pre class="output-pre">${esc(articleRaw)}</pre>
       </div>`;
-  });
+  }
 
   document.getElementById('outputBody').innerHTML = html;
 }
 
-function copySection(id) {
+/* ── SCRIPT PARSER ─────────────────────────────────────────────── */
+function parseScript(text) {
+  const numMatch   = text.match(/SCRIPT\s+(\d+)/i);
+  const titleMatch = text.match(/SCRIPT\s+\d+[:\s]+([^\n]+)/i);
+  const num   = numMatch?.[1]   || '?';
+  const title = titleMatch?.[1]?.trim() || '';
+
+  function between(startRe, endRe) {
+    const s = text.search(startRe);
+    if (s === -1) return '';
+    const colonPos = text.indexOf(':', s);
+    if (colonPos === -1) return '';
+    const e = endRe ? text.search(endRe) : -1;
+    const raw = (e > colonPos ? text.slice(colonPos + 1, e) : text.slice(colonPos + 1)).trim();
+    return raw;
+  }
+
+  const hook       = between(/🎬/,  /👁/);
+  const seen       = between(/👁/,  /💡/);
+  const position   = between(/💡/,  /📱/);
+  const screenshot = between(/📱/,  /📹|CAPTIONS/i);
+  const broll      = between(/📹/,  /CAPTIONS/i);
+
+  // Captions
+  const capStart = text.search(/CAPTIONS/i);
+  const capBlock = capStart !== -1 ? text.slice(capStart) : '';
+
+  const PLATFORMS = [
+    { key:'linkedin',  label:'LinkedIn'       },
+    { key:'tiktok',    label:'TikTok'         },
+    { key:'instagram', label:'Instagram'       },
+    { key:'x',         label:'X / Twitter'    },
+    { key:'facebook',  label:'Facebook'        },
+    { key:'youtube',   label:'YouTube Shorts'  },
+  ];
+
+  const captions = {};
+  PLATFORMS.forEach((plat, i) => {
+    const re = new RegExp(plat.label.split(' ')[0] + '[^:\\n]*:', 'i');
+    const match = capBlock.match(re);
+    if (!match) return;
+    const start = capBlock.indexOf(match[0]) + match[0].length;
+    let end = capBlock.length;
+    PLATFORMS.slice(i + 1).forEach(next => {
+      const nr = new RegExp(next.label.split(' ')[0] + '[^:\\n]*:', 'i');
+      const nm = capBlock.search(nr);
+      if (nm > start && nm < end) end = nm;
+    });
+    const val = capBlock.slice(start, end).trim();
+    if (val) captions[plat.key] = { label: plat.label, text: val };
+  });
+
+  return { num, title, hook, seen, position, screenshot, broll, captions, raw: text };
+}
+
+/* ── SCRIPT CARD RENDERER ──────────────────────────────────────── */
+function renderScriptCard(s, id) {
+  const scriptOnly = [s.hook, s.seen, s.position, s.screenshot].filter(Boolean).join('\n\n');
+  outMap[id + '-script'] = `Script ${s.num}: ${s.title}\n\n${scriptOnly}`;
+  outMap[id + '-raw']    = s.raw;
+  Object.entries(s.captions).forEach(([k, c]) => { outMap[`${id}-${k}`] = c.text; });
+
+  const parts = [
+    { cls:'hook',       icon:'🎬', label:'Hook (5s)',           text: s.hook },
+    { cls:'seen',       icon:'👁', label:"What I've Seen (8s)", text: s.seen },
+    { cls:'position',   icon:'💡', label:'My Position (12s)',   text: s.position },
+    { cls:'screenshot', icon:'📱', label:'Screenshot Line (5s)',text: s.screenshot },
+    { cls:'broll',      icon:'📹', label:'B-Roll',               text: s.broll },
+  ].filter(p => p.text);
+
+  const partsHtml = parts.map(p => `
+    <div class="sp sp-${p.cls}">
+      <div class="sp-label">${p.icon} ${p.label}</div>
+      <div class="sp-text">${esc(p.text)}</div>
+    </div>`).join('');
+
+  const capRows = Object.entries(s.captions).map(([k, c]) => `
+    <div class="cap-row">
+      <div class="cap-plat">${c.label}</div>
+      <div class="cap-text">${esc(c.text)}</div>
+      <button class="cap-btn" onclick="copyOut('${id}-${k}',this)">Copy</button>
+    </div>`).join('');
+
+  const capsSection = capRows ? `
+    <div class="sc-captions">
+      <div class="sc-captions-hdr">
+        <span>Captions</span>
+        <button class="sc-cap-all-btn" onclick="copyOut('${id}-raw',this)">Copy All</button>
+      </div>
+      ${capRows}
+    </div>` : '';
+
+  return `
+    <div class="script-card" id="${id}">
+      <div class="sc-header">
+        <div class="sc-num">Script ${s.num}</div>
+        <div class="sc-title">${esc(s.title)}</div>
+        <button class="sc-copy-btn" onclick="copyOut('${id}-script',this)">Copy Script</button>
+      </div>
+      <div class="sc-parts">${partsHtml}</div>
+      ${capsSection}
+    </div>`;
+}
+
+/* ── COPY HELPER ───────────────────────────────────────────────── */
+function copyOut(id, btn) {
   const text = outMap[id];
   if (!text) return;
   navigator.clipboard.writeText(text).then(() => {
-    const btn = document.querySelector(`#${id} .output-copy-btn`) ||
-      document.querySelector('.copy-all-btn');
     if (!btn) return;
     const prev = btn.textContent;
-    btn.textContent = '✓ Copied';
+    btn.textContent = '✓';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = prev; btn.classList.remove('copied'); }, 2000);
   }).catch(() => {
-    // Fallback: select the pre text
-    const pre = document.querySelector(`#${id} pre`);
-    if (pre) { const r = document.createRange(); r.selectNodeContents(pre); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+    // Select-all fallback for browsers blocking clipboard
+    try {
+      const tmp = document.createElement('textarea');
+      tmp.value = text; tmp.style.position = 'fixed'; tmp.style.opacity = '0';
+      document.body.appendChild(tmp); tmp.select();
+      document.execCommand('copy');
+      document.body.removeChild(tmp);
+      if (btn) { const p=btn.textContent; btn.textContent='✓'; setTimeout(()=>{btn.textContent=p;},2000); }
+    } catch {}
   });
 }
-
-function copyAll() { copySection('all'); }
 
 function backToQueue() {
   document.getElementById('outputPanel').style.display = 'none';
