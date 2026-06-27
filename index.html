@@ -224,6 +224,51 @@ a:hover { text-decoration:underline; }
 .filter-btn.active.tzke-f { background:var(--tzke); border-color:var(--tzke); }
 .filter-btn.tzke-f:not(.active):hover { border-color:var(--tzke); color:var(--tzke); }
 
+/* ── SUGGEST BAR ───────────────────────────────────────────────── */
+.suggest-bar {
+  display:flex; gap:0; margin-bottom:16px;
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:var(--r-sm); overflow:hidden; transition:border-color var(--t);
+}
+.suggest-bar:focus-within { border-color:var(--gold-border); }
+.suggest-input {
+  flex:1; background:none; border:none; outline:none;
+  padding:10px 14px; color:var(--text); font-size:13px; font-family:var(--font);
+}
+.suggest-input::placeholder { color:var(--text-3); }
+.suggest-btn {
+  background:var(--gold); color:var(--bg); border:none;
+  padding:10px 16px; font-size:12px; font-weight:700;
+  font-family:var(--font); cursor:pointer; white-space:nowrap;
+  transition:background var(--t); flex-shrink:0;
+}
+.suggest-btn:hover:not(:disabled) { background:var(--gold-lt); }
+.suggest-btn:disabled { opacity:.45; cursor:not-allowed; }
+
+/* ── VERDICT CARD ──────────────────────────────────────────────── */
+.verdict-banner {
+  display:flex; gap:9px; align-items:flex-start;
+  padding:9px 12px; margin-bottom:9px; border-radius:6px;
+  font-size:11px; line-height:1.55;
+}
+.verdict-yes  { background:rgba(52,211,153,.1); border:1px solid rgba(52,211,153,.25); color:#6EE7B7; }
+.verdict-maybe{ background:rgba(251,191,36,.1);  border:1px solid rgba(251,191,36,.25);  color:#FBBF24; }
+.verdict-no   { background:rgba(248,113,113,.1); border:1px solid rgba(248,113,113,.25); color:#FCA5A5; }
+.verdict-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+.verdict-body strong { display:block; font-size:12px; font-weight:700; margin-bottom:3px; }
+.verdict-improve {
+  margin-top:6px; padding:6px 9px; border-radius:5px;
+  background:rgba(255,255,255,.05); font-size:11px;
+  color:var(--text-2); line-height:1.5;
+}
+.custom-badge {
+  font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.07em;
+  background:var(--purple-bg); color:var(--purple);
+  border-radius:4px; padding:2px 6px; flex-shrink:0;
+}
+.topic-card.custom-card { border-color:var(--purple); }
+.topic-card.custom-card::before { background:var(--purple); }
+
 /* ── SECTION HEADER ────────────────────────────────────────────── */
 .section-header {
   display:flex; align-items:center; justify-content:space-between;
@@ -836,6 +881,15 @@ a:hover { text-decoration:underline; }
       </div>
     </div>
 
+    <!-- Suggest a topic -->
+    <div class="suggest-bar">
+      <input type="text" id="suggestInput" class="suggest-input"
+             placeholder="Suggest a topic — e.g. 'AI grading essays in African schools'…"
+             maxlength="140"
+             onkeydown="if(event.key==='Enter')researchTopic()">
+      <button class="suggest-btn" id="suggestBtn" onclick="researchTopic()">Research it →</button>
+    </div>
+
     <!-- Filters -->
     <div class="filters">
       <span class="filter-label">Filter:</span>
@@ -1004,18 +1058,35 @@ function render() {
 }
 
 function renderCard(t) {
-  const sel = selected.has(t.id);
+  const sel    = selected.has(t.id);
   const isTZKE = t.tzke || t.category === 'TZ/KE Context';
-  const plats = (t.platforms || []).slice(0,5).map(p => `<span class="plat-chip">${esc(p)}</span>`).join('');
+  const plats  = (t.platforms || []).slice(0,5).map(p => `<span class="plat-chip">${esc(p)}</span>`).join('');
   const catCls = CAT_CLASS[t.category] || 'cat-edu';
+  const vDots  = scoreDots(t.virality || 0, 10, isTZKE);
+  const bDots  = scoreDots(t.brandFit || 0, 10, isTZKE);
+  const brDots = scoreDots(t.bridge   || 0, 10, isTZKE);
 
-  const maxScore = 10;
-  const vDots  = scoreDots(t.virality || 0, maxScore, isTZKE);
-  const bDots  = scoreDots(t.brandFit || 0, maxScore, isTZKE);
-  const brDots = scoreDots(t.bridge || 0, maxScore, isTZKE);
+  // Verdict banner for custom-researched topics
+  let verdictHtml = '';
+  if (t.custom && t.verdict) {
+    const v = t.verdict;
+    const icon  = v==='yes' ? '✓' : v==='maybe' ? '◑' : '✗';
+    const label = v==='yes' ? 'Worth it' : v==='maybe' ? 'Maybe — read the note' : 'Rethink the angle';
+    verdictHtml = `
+      <div class="verdict-banner verdict-${v}">
+        <div class="verdict-icon">${icon}</div>
+        <div class="verdict-body">
+          <strong>${label}</strong>
+          ${esc(t.verdict_reason || '')}
+          ${t.improvements ? `<div class="verdict-improve">💡 ${esc(t.improvements)}</div>` : ''}
+        </div>
+      </div>`;
+  }
+
+  const customClass = t.custom ? ' custom-card' : '';
 
   return `
-<div class="topic-card${sel?' selected':''}${isTZKE?' tzke-card':''}" data-id="${t.id}" onclick="toggleSelect(${t.id})">
+<div class="topic-card${sel?' selected':''}${isTZKE?' tzke-card':''}${customClass}" data-id="${t.id}" onclick="toggleSelect(${t.id})">
   <div class="card-top">
     <div class="card-title">${esc(t.title)}</div>
     <div class="select-ring">
@@ -1027,6 +1098,7 @@ function renderCard(t) {
 
   <div class="card-badges">
     <span class="cat-badge ${catCls}">${esc(t.category)}</span>
+    ${t.custom ? `<span class="custom-badge">Your idea</span>` : ''}
   </div>
 
   <div class="score-row" style="margin-bottom:8px">
@@ -1035,6 +1107,7 @@ function renderCard(t) {
     <div class="score-item" style="margin-left:8px"><div class="score-dots">${brDots}</div><div class="score-label">Bridge</div></div>
   </div>
 
+  ${verdictHtml}
   ${t.trendingBecause ? `<div class="card-why"><strong>Now:</strong> ${esc(t.trendingBecause)}</div>` : ''}
   ${t.michaelAngle    ? `<div class="card-angle">💡 ${esc(t.michaelAngle)}</div>` : ''}
   ${t.hook            ? `<div class="card-hook">"${esc(t.hook)}"</div>` : ''}
@@ -1139,6 +1212,136 @@ function setupSwipe() {
     }
     dragging = null;
   }, { passive: true });
+}
+
+/* ── SUGGEST & RESEARCH A TOPIC ────────────────────────────────── */
+async function researchTopic() {
+  const key   = localStorage.getItem(KEY_STORE) || '';
+  if (!key) { openSettings(); flashHint('Add your API key first'); return; }
+
+  const input = document.getElementById('suggestInput');
+  const btn   = document.getElementById('suggestBtn');
+  const idea  = input.value.trim();
+  if (!idea) { input.focus(); return; }
+
+  btn.disabled    = true;
+  btn.textContent = 'Researching…';
+
+  // Insert a loading placeholder at the top of the grid
+  const grid      = document.getElementById('grid');
+  const loadCard  = document.createElement('div');
+  loadCard.id     = 'suggest-loading';
+  loadCard.className = 'topic-card';
+  loadCard.style.borderColor = 'var(--purple)';
+  loadCard.innerHTML = `
+    <div class="card-top" style="margin-bottom:0">
+      <div class="card-title" style="color:var(--text-3);font-size:13px">
+        Researching: <em>"${esc(idea)}"</em>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:9px;color:var(--text-3);font-size:11px;margin-top:10px">
+      <div class="upgrade-spinner"></div>
+      Checking timeliness, brand fit, hook potential…
+    </div>`;
+  grid.prepend(loadCard);
+  loadCard.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: buildResearchPrompt(idea) }]
+      })
+    });
+
+    const data    = await res.json();
+    const raw     = data.content?.[0]?.text || '';
+    const cleaned = raw.replace(/```json\s*/gi,'').replace(/```\s*/gi,'').trim();
+    const match   = cleaned.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No JSON returned');
+
+    const result = JSON.parse(match[0]);
+
+    // Build the topic object
+    const customTopic = {
+      ...result.topic,
+      id:             Date.now(),
+      custom:         true,
+      verdict:        result.verdict        || 'maybe',
+      verdict_reason: result.verdict_reason || '',
+      improvements:   result.improvements   || '',
+      aiEnhanced:     true
+    };
+
+    loadCard.remove();
+    topics.unshift(customTopic);
+    render();
+    // Scroll the new card into view
+    document.querySelector('[data-id="' + customTopic.id + '"]')
+      ?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+    input.value = '';
+
+  } catch (e) {
+    loadCard.innerHTML = `<div style="color:var(--error);font-size:12px;padding:4px 0">
+      Research failed: ${esc(e.message)}<br>
+      <button onclick="document.getElementById('suggest-loading').remove()"
+              style="margin-top:6px;background:none;border:1px solid var(--border-md);
+                     color:var(--text-3);padding:3px 10px;border-radius:5px;cursor:pointer;font-size:11px">
+        Dismiss
+      </button>
+    </div>`;
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Research it →';
+  }
+}
+
+function buildResearchPrompt(idea) {
+  const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  return `${VOICE}
+
+Today is ${today}. Michael has a topic idea he wants to explore for Sekunde 30.
+
+HIS IDEA: "${idea}"
+
+Evaluate this against three things:
+1. TIMELINESS — Is there a real, current news hook or trending conversation around this right now?
+2. BRAND FIT — Does it align with LENZI (Learning, Technology, Systems) and Michael's positioning?
+3. MICHAEL'S EDGE — Does he have something unique to say from his fieldwork that nobody else can say?
+
+Be honest. If the idea is weak as stated but can be saved with a sharper angle, say so.
+If it is genuinely strong, say so. If it is off-brand, say so directly.
+
+Return ONLY valid JSON, no markdown, no explanation:
+{
+  "verdict": "yes",
+  "verdict_reason": "2-3 honest sentences on why this is or isn't worth pursuing right now. Specific.",
+  "improvements": "If verdict is maybe or no: exactly how should Michael reframe or sharpen this to make it work? Leave empty string if verdict is yes.",
+  "topic": {
+    "id": 99,
+    "title": "Sharpened title under 10 words — Michael's voice, not generic",
+    "category": "AI & Humanity",
+    "virality": 8,
+    "brandFit": 9,
+    "bridge": 7,
+    "trendingBecause": "One sentence: why this is timely right now, with a named source or event if possible",
+    "michaelAngle": "First-person: the specific unique angle Michael brings from his evidence or fieldwork",
+    "hook": "Under 15 words. First person. Stops the scroll.",
+    "angle": "The distinctive or counter-narrative take",
+    "platforms": ["LinkedIn","TikTok"],
+    "sourceContext": "Key source, institution, or context",
+    "tzke": false
+  }
+}`;
 }
 
 /* ── FILTERS ───────────────────────────────────────────────────── */
