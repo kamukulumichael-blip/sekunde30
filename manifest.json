@@ -14,21 +14,32 @@
   ],
   "icons": [
     {
+      "src": "/sekunde30/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/sekunde30/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
       "src": "/sekunde30/icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/svg+xml"
     }
   ],
   "shortcuts": [
     {
       "name": "This Week's Topics",
       "short_name": "Topics",
-      "url": "/sekunde30/?focus=topics",
+      "url": "/sekunde30/",
       "icons": [
         {
-          "src": "/sekunde30/icon.svg",
-          "sizes": "any"
+          "src": "/sekunde30/icon-192.png",
+          "sizes": "192x192"
         }
       ]
     }
