@@ -1,17 +1,20 @@
 {
-  "name": "Sekunde 30 · LENZI",
+  "name": "Sekunde 30 \u00b7 LENZI",
   "short_name": "Sekunde 30",
   "description": "Michael Kamukulu's weekly content production intelligence hub",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/sekunde30/",
+  "scope": "/sekunde30/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#080C18",
   "background_color": "#080C18",
-  "categories": ["productivity", "news"],
+  "categories": [
+    "productivity",
+    "news"
+  ],
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "/sekunde30/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
@@ -21,9 +24,13 @@
     {
       "name": "This Week's Topics",
       "short_name": "Topics",
-      "description": "Jump straight to the topic feed",
-      "url": "/?focus=topics",
-      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+      "url": "/sekunde30/?focus=topics",
+      "icons": [
+        {
+          "src": "/sekunde30/icon.svg",
+          "sizes": "any"
+        }
+      ]
     }
   ]
 }
