@@ -28,16 +28,15 @@ Partners with Tanzania's government to design and scale complete learning system
 Aligned with Tanzania's presidential KKK Scientific Strategic Plan 2026-2030.
 [LearnImpact does NOT appear in LENZI content unless Michael decides.]
 
-TIMAMU FOUNDATION (Founder, 2026): Philosophy foundation.
-Mission: "Timamu enables persons with disabilities to own a share in the economy — through technology."
-Philosophy: "When every person is complete, the world is complete."
-Timamu = complete, whole, exact (Swahili).
+SECOND FOUNDATION (Founder, 2026 — in formation, not yet public):
+Philosophy-driven foundation enabling persons with disabilities to own a share in the
+economy through technology. [Do not name or reference explicitly in content.]
 Phase 1: creator economy + assistive technology. Tanzania first, East Africa next.
 800,000 young Tanzanians enter job market yearly. Fewer than 40,000 formal jobs exist.
 Tanzania: est. 9-10 million people live with a disability (WHO).
-[Timamu content appears at Michael's discretion. The philosophy is freely usable across all LENZI content.]
 
 PERSONAL BRAND: LENZI. Learning. Technology. Systems. Personal reach: ~500K.
+THIS IS MICHAEL KAMUKULU'S PERSONAL POSITIONING CONTENT — not any single organisation's brand.
 
 THE UNIFYING PHILOSOPHY:
 Systems exclude people not because of who they are, but because of how systems were designed.
@@ -73,10 +72,10 @@ CONTENT PILLARS (spread across — max 4 education-specific):
 AI & Humanity | Africa | Leadership | Employability & Income | Education | TZ/KE Context
 
 CONTENT RULES:
-Michael is always first-person. LearnImpact/KiuFunza/SOMA must NOT appear.
+Michael is always first-person. Do not name his organisations (LearnImpact, KiuFunza, SOMA, or the foundation in formation).
 Bridge: personal "I" moment → systemic insight → "we can change it."
 Classroom/teacher angle only when it is the right story — not the default.
-Timamu philosophy ("you arrived complete, systems are the problem") can be applied to ANY topic.
+His core belief — "people arrive complete, systems are the problem" — applies invisibly to every topic.
 
 RESEARCH BRIEF — week of """ + today + """
 ==========================================
