@@ -1410,9 +1410,14 @@ async function startGenerate(mode) {
       throw new Error(errBody.error?.message || 'API error ' + res.status);
     }
 
-    // Show streaming area
-    document.getElementById('outputBody').innerHTML = `<div class="output-stream" id="streamEl"></div>`;
-    const streamEl = document.getElementById('streamEl');
+    // Show live progress indicator (not raw JSON)
+    document.getElementById('outputBody').innerHTML = `
+      <div class="generating-state" id="genState">
+        <div class="gen-spinner"></div>
+        <div class="gen-label" id="genWords">Writing your scripts…</div>
+        <div class="gen-sub">Hang tight — full scripts + all formats take about a minute.</div>
+        <div class="gen-progress"><div class="gen-progress-bar" id="genBar" style="width:5%"></div></div>
+      </div>`;
 
     const reader  = res.body.getReader();
     const decoder = new TextDecoder();
@@ -1423,14 +1428,16 @@ async function startGenerate(mode) {
       const chunk = decoder.decode(value, { stream: true });
       for (const line of chunk.split('\n')) {
         if (!line.startsWith('data: ')) continue;
-        const data = line.slice(6).trim();
-        if (data === '[DONE]') continue;
+        const raw = line.slice(6).trim();
+        if (raw === '[DONE]') continue;
         try {
-          const evt = JSON.parse(data);
+          const evt = JSON.parse(raw);
           if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
             buffer += evt.delta.text;
-            streamEl.textContent = buffer;
-            streamEl.scrollIntoView({ block: 'end', behavior: 'smooth' });
+            // Update word count estimate for live feedback
+            const words = Math.floor(buffer.split(/\s+/).length);
+            const wordsEl = document.getElementById('genWords');
+            if (wordsEl) wordsEl.textContent = `Writing… ~${words} words generated`;
           }
         } catch {}
       }
@@ -1480,11 +1487,41 @@ function finalizeOutput(rawText, mode) {
   const scripts  = Array.isArray(data.scripts)  ? data.scripts  : [];
   const articles = Array.isArray(data.articles) ? data.articles : [];
 
+  if (!scripts.length && !articles.length) {
+    document.getElementById('outputBody').innerHTML = `
+      <button class="copy-all-btn" onclick="copyOut('all',this)">Copy Raw Output</button>
+      <div class="script-card"><pre class="output-pre">${esc(rawText)}</pre></div>`;
+    return;
+  }
+
   let html = `<button class="copy-all-btn" onclick="copyOut('all',this)">Copy Everything</button>`;
-  scripts.forEach((s, i)  => { html += renderScript(s,  `sc${i}`); });
-  articles.forEach((a, i) => { html += renderArticle(a, `ar${i}`); });
+
+  scripts.forEach((s, i) => {
+    try { html += renderScript(s, `sc${i}`); }
+    catch (e) {
+      html += `<div class="script-card" style="padding:14px">
+        <div style="color:var(--error);font-size:12px;margin-bottom:8px">
+          ⚠ Script ${i+1} rendering error: ${esc(String(e))}
+        </div>
+        <pre class="output-pre">${esc(JSON.stringify(s, null, 2))}</pre>
+      </div>`;
+    }
+  });
+
+  articles.forEach((a, i) => {
+    try { html += renderArticle(a, `ar${i}`); }
+    catch (e) {
+      html += `<div class="script-card" style="padding:14px">
+        <div style="color:var(--error);font-size:12px;margin-bottom:8px">
+          ⚠ Article ${i+1} rendering error: ${esc(String(e))}
+        </div>
+        <pre class="output-pre">${esc(JSON.stringify(a, null, 2))}</pre>
+      </div>`;
+    }
+  });
 
   document.getElementById('outputBody').innerHTML = html;
+  document.getElementById('outputBody').scrollTop = 0;
 }
 
 function renderScript(s, id) {
