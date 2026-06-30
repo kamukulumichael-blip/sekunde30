@@ -135,14 +135,24 @@ req = urllib.request.Request(
     }
 )
 
-try:
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
-except urllib.error.HTTPError as e:
-    print(f"API error {e.code}: {e.read().decode()}", file=sys.stderr)
-    sys.exit(1)
-except Exception as e:
-    print(f"Request failed: {e}", file=sys.stderr)
+data = None
+for attempt in range(1, 4):
+    try:
+        with urllib.request.urlopen(req, timeout=240) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        break
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        print(f"Attempt {attempt}: API error {e.code}: {body}", file=sys.stderr)
+        if e.code in (400, 401, 403):
+            sys.exit(1)  # non-retryable
+    except Exception as e:
+        print(f"Attempt {attempt}: Request failed: {e}", file=sys.stderr)
+    if attempt < 3:
+        import time; time.sleep(10 * attempt)
+
+if data is None:
+    print("All 3 attempts failed", file=sys.stderr)
     sys.exit(1)
 
 raw   = data.get("content", [{}])[0].get("text", "")
